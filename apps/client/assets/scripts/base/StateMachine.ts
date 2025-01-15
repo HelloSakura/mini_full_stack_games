@@ -1,5 +1,11 @@
+/**
+* @author Lucida
+* @description: 有限状态机基类
+* @date: 2025/01/14
+*/
+
 import { _decorator, Component } from "cc";
-import { FsmParamTypeEnum } from "../Enum/enum";
+import { FsmParamTypeEnum } from "../Enum/Enum";
 
 const { ccclass } = _decorator
 

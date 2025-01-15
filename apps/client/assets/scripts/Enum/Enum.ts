@@ -10,10 +10,14 @@ export enum FsmParamTypeEnum {
     Trigger = "Trigger",
   }
   
-  export enum ParamsNameEnum {
-    Idle = "Idle",
-    Run = "Run",
-    Attack = "Attack",
-  }
+export enum ParamsNameEnum {
+  Idle = "Idle",
+  Run = "Run",
+  Attack = "Attack",
+}
+
+export enum EntityStateEnum {
+
+}
   
-  export enum EventEnum {}
+export enum EventEnum {}
