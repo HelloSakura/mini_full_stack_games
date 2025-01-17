@@ -1,24 +1,18 @@
 /**
  * @author Lucida
- * @description 单例
+ * @description 单例, 返回一个类，私有成员
  * @date Mon Dec 23 23:49:57 CST 2024
  */
 
-export default class Singleton{
-    //保存类的唯一实例
-    private static _instance: any;
-
-    //模板保证继承
-    static getInstance<T>(){
-        if(!this._instance){
-            this._instance = new Singleton();
+export function Singleton<T>(){
+    class Singleton{
+        private static _instance: T;
+        
+        public static get Instance():T{
+            return Singleton._instance ??= new this() as T;
         }
-        return this._instance as T;
     }
 
-    //构造函数私有化，防止外部创建
-    protected constructor(){
-
-    }
-
+    return Singleton;
 }
+
