@@ -4,21 +4,17 @@
  * @date Mon Dec 23 23:49:57 CST 2024
  */
 
-export default class Singleton{
-    //保存类的唯一实例
-    private static _instance: any;
+export function Singleton<T>() {
+    class Singleton {
+        private static _instance: T;
 
-    //模板保证继承
-    static getInstance<T>(){
-        if(!this._instance){
-            this._instance = new Singleton();
+        /**
+         * 获取该类的唯一实例
+         * @returns {T} 返回该类的唯一实例
+         */
+        public static get Instance(): T {
+            return Singleton._instance ??= new this() as T
         }
-        return this._instance as T;
     }
-
-    //构造函数私有化，防止外部创建
-    protected constructor(){
-
-    }
-
+    return Singleton;
 }

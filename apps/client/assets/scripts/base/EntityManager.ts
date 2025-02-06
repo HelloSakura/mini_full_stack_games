@@ -6,7 +6,7 @@
 
 import { _decorator, Component} from 'cc';
 import StateMachine from './StateMachine';
-import { EntityStateEnum } from '../Enum/enum';
+import { EntityStateEnum } from '../Enum/Enum';
 
 const {ccclass, property} = _decorator
 
