@@ -53,7 +53,12 @@ export default class State{
 
 
     run(){
-        
+        // TODO: 为啥子这样写
+        if(this._fsm.Animation.defaultClip?.name === this._animationClip.name && !this._force){
+            return;
+        }
+        this._fsm.Animation.defaultClip = this._animationClip;
+        this._fsm.Animation.play();
     }
 
 

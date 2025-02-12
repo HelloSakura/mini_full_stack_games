@@ -19,11 +19,15 @@ export default abstract class SubStateMachine {
         this._stateMachine = fsm;
     }
 
-    public get currentState(): State {
+    public get StateMachine():StateMachine{
+        return this._stateMachine;
+    }
+    
+    public get CurrentState(): State {
         return this._currentState;
     }
 
-    public set currentState(newSate: State) {
+    public set CurrentState(newSate: State) {
         if(!newSate) return;
 
         this._currentState = newSate;

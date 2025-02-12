@@ -17,7 +17,7 @@ export enum ParamsNameEnum {
 }
 
 export enum EntityStateEnum {
-
+  Idle = "Idle"
 }
   
 export enum EventEnum {}

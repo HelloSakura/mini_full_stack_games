@@ -22,9 +22,10 @@ export abstract class EntityManager extends Component{
         return this._state;
     }
 
-    set State(state:EntityStateEnum){
-        this._state = state;
-        this._fsm.setParam(state, true);
+    set State(newState:EntityStateEnum){
+        this._state = newState;
+        //怎么转出来的，用字符串做key？？
+        this._fsm.setParams(newState, true);
     }
 
     abstract init(...agrs:any[]):void;

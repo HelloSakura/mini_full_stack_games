@@ -4,7 +4,7 @@
 * @date: 2025/01/14
 */
 
-import { _decorator, Component } from "cc";
+import { _decorator, Component, Animation } from "cc";
 import { FsmParamTypeEnum } from "../Enum/Enum";
 import State from "./State";
 import SubStateMachine from "./SubStateMachine";
@@ -53,8 +53,58 @@ export default abstract class StateMachine extends Component{
     //当前状态动画机
     private _animation: Animation = null;
     private _type: EntityTypeEnum = EntityTypeEnum.Init;
+    
 
+    /**
+     * 获得状态参数
+     */
+    public getParams(key:string){
+        if(this._params.has(key)){
+            return this._params.get(key);
+        }
+    }
 
+    /**
+     * 设置状态参数
+     */
+    public setParams(key:string, value:ParamsValueType){
+        //如果保存了这个参数，表示可以进行状态切换
+        if(this._params.has(key)){
+            this._params.get(key).value = value;
+            this.run();
+            this.resetTrigger();
+        }
+    }
+
+    public get Animation():Animation{
+        return this._animation;
+    }
+
+    public get Type(): EntityTypeEnum{
+        return this._type;
+    }
+
+    public get CurrentState(): State | SubStateMachine{
+        return this._curState;
+    }
+
+    public set CurrentState(newSate: State | SubStateMachine) {
+        if(!newSate) return;
+
+        this._curState = newSate;
+        this._curState.run();
+    }
+
+    /**
+     * 重置所有触发器，为啥？？
+     */
+    public resetTrigger(){
+        for(const [_, value] of this._params){
+            if(value.type === FsmParamTypeEnum.Trigger){
+                value.value = false;
+            }
+        }
+    }
 
     //状态流程控制
 
