@@ -20,4 +20,6 @@ export enum EntityStateEnum {
   Idle = "Idle"
 }
   
-export enum EventEnum {}
+export enum EventEnum {
+  Init = 'Init'
+}

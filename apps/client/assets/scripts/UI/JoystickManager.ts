@@ -3,6 +3,7 @@ const { ccclass, property } = _decorator;
 
 @ccclass('JoystickManager')
 export class JoystickManager extends Component {
+    //对外暴露的移动向量
     public input:Vec2 = Vec2.ZERO;
 
     @property({type:Node, tooltip: 'Body'})
