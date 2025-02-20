@@ -53,7 +53,7 @@ export class JoystickManager extends Component {
         this.body.setPosition(this._defaultPos.x, this._defaultPos.y);
         this.joystick.setPosition(0, 0);
         this.input = Vec2.ZERO;
-        console.log('End: ', this.input);
+        //console.log('End: ', this.input);
     }
 
     onTouchMove(event: EventTouch){
@@ -66,9 +66,7 @@ export class JoystickManager extends Component {
         }
         this.joystick.setPosition(stickPos.x, stickPos.y);
         this.input = stickPos.clone().normalize();
-        console.log('Move: ', this.input);
+        //console.log('Move: ', this.input);
 
     }
 }
-
-
