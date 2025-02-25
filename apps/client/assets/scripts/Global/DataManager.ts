@@ -4,16 +4,19 @@
 * @date: 2025/02/06
 */
 
-import { SpriteFrame } from "cc";
+import { Prefab, SpriteFrame } from "cc";
 import { Singleton } from "../Base/Singleton";
-import { IActorMove, IState } from "../Common";
+import { EntityTypeEnum, IActorMove, IState } from "../Common";
 import { JoystickManager } from "../UI/JoystickManager";
+import { ActorManager } from "../Entity/Actor/ActorManager";
 
-const ACTOR_SPEED = 100;
+const ACTOR_SPEED = 1;
 
 export class DataManager extends Singleton<DataManager>() {
     private _textureMap:Map<string, SpriteFrame[]> = new Map();
     private _jm:JoystickManager;    //摇杆控制器
+    private actorMap:Map<number, ActorManager> = new Map();
+    private prefabMap:Map<string, Prefab> = new Map();
     
     private _state:IState = {
         actors:[
@@ -21,6 +24,7 @@ export class DataManager extends Singleton<DataManager>() {
                 id:1,
                 position:{x:0, y:0},
                 direction:{x:0, y:0},
+                type:EntityTypeEnum.Actor1
             }
 
         ]
@@ -29,6 +33,14 @@ export class DataManager extends Singleton<DataManager>() {
 
     public get State():IState{
         return this._state;
+    }
+
+    public get ActorMap():Map<number, ActorManager>{
+        return this.actorMap;
+    }
+
+    public get PrefabMap():Map<string, Prefab>{
+        return this.prefabMap;
     }
     public set JoystickManager(jm:JoystickManager){
         this._jm = jm;

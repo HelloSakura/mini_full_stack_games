@@ -4,7 +4,7 @@
 * @date: 2025/02/21
 */
 
-import { InputTypeEnum } from "./Enum"
+import { EntityTypeEnum, InputTypeEnum } from "./Enum"
 
 export interface IVec2{
     x:number,
@@ -15,6 +15,7 @@ export interface IActor{
     id:number,
     position:IVec2,
     direction:IVec2,
+    type:EntityTypeEnum
 }
 
 

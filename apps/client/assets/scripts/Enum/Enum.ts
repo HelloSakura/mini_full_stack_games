@@ -23,3 +23,9 @@ export enum EntityStateEnum {
 export enum EventEnum {
   Init = 'Init'
 }
+
+//PrefabPathEnum的key必须和EntityTypeEnum的value一致
+export enum PrefabPathEnum {
+  Actor1 = 'prefab/Actor',
+  Map = 'prefab/Map'
+}
