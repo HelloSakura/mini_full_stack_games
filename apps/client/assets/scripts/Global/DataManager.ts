@@ -26,7 +26,6 @@ export class DataManager extends Singleton<DataManager>() {
                 direction:{x:0, y:0},
                 type:EntityTypeEnum.Actor1
             }
-
         ]
     }
 

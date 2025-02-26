@@ -38,22 +38,23 @@ export class BattleManager extends Component{
         this._shouldUpdate = true;
     }
 
-    update(){
+    update(dt){
         if(this._shouldUpdate){
             this._render();
+            this._tick(dt);
         }
     }
 
+    private _tick(dt:number){
+        this._tickActor(dt)
+    }
 
-    private async _loadRes(){
-        const list = [];
-        for(const type in PrefabPathEnum){
-            const p = ResourceManager.Instance.loadRes(PrefabPathEnum[type], Prefab).then((Prefab)=>{
-                DataManager.Instance.PrefabMap.set(type, Prefab);
-            });
-            list.push(p);
+    private _tickActor(dt:number){
+        for(const data of DataManager.Instance.State.actors){
+            let am = DataManager.Instance.ActorMap.get(data.id);
+            am.tick(dt);
         }
-        await Promise.all(list);
+
     }
 
     private _render(){
@@ -82,5 +83,16 @@ export class BattleManager extends Component{
         const prefab = DataManager.Instance.PrefabMap.get(EntityTypeEnum.Map);
         const map = instantiate(prefab);
         map.setParent(this._stage);
+    }
+
+    private async _loadRes(){
+        const list = [];
+        for(const type in PrefabPathEnum){
+            const p = ResourceManager.Instance.loadRes(PrefabPathEnum[type], Prefab).then((Prefab)=>{
+                DataManager.Instance.PrefabMap.set(type, Prefab);
+            });
+            list.push(p);
+        }
+        await Promise.all(list);
     }
 }

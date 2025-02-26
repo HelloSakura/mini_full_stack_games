@@ -18,7 +18,7 @@ export class ActorManager extends Component{
 
     }
 
-    update(dt){
+    tick(dt:number){
         //没有用事件，而是根据摇杆的标量来判断是否有移动
         if(DataManager.Instance.JoystickManager.input.length() > 0){
             const {x, y} = DataManager.Instance.JoystickManager.input
@@ -34,6 +34,11 @@ export class ActorManager extends Component{
     }
 
     render(data:IActor){
-        this.node.setPosition(data.position.x, data.position.y)
+        const {direction, position} = data;
+        this.node.setPosition(position.x, position.y);
+        if(direction.x !== 0){
+            this.node.setScale(direction.x > 0 ? 1:-1, 1)
+        }
+
     }
 }
