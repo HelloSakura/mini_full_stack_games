@@ -7,15 +7,20 @@
 import { _decorator, Component} from "cc";
 import { DataManager } from "../../Global/DataManager";
 import { IActor, InputTypeEnum } from "../../Common";
+import { EntityManager } from "../../Base/EntityManager";
+import { ActorStateMachine } from "./ActorStateMachine";
+import { EntityStateEnum } from "../../Enum/Enum";
 
 const { ccclass, property } = _decorator;
 
 @ccclass('ActorManager')
-export class ActorManager extends Component{
+export class ActorManager extends EntityManager{
     
 
     init(data:IActor){
-
+        this._fsm = this.node.addComponent(ActorStateMachine);
+        this._fsm.init(data.type);      //初始化状态机
+        this._state = EntityStateEnum.Idle;     //设置初始状态为Idle状态
     }
 
     tick(dt:number){

@@ -5,8 +5,8 @@
 */
 
 import { _decorator, Component} from "cc";
-import State from "./State";
-import StateMachine from "./StateMachine";
+import { State } from "./State";
+import { StateMachine } from "./StateMachine";
 
 const { ccclass, property } = _decorator;
 

@@ -5,9 +5,9 @@
  */
 
 import { animation, AnimationClip, Sprite, SpriteFrame } from "cc"
-import StateMachine from "./StateMachine";
 import { sortSpriteFrame } from "../Utils/Utils";
 import { DataManager } from "../Global/DataManager";
+import { StateMachine } from "./StateMachine";
 
 //TODO:动画播放速度
 export const ANIMATION_SPEED = 1 / 10;
@@ -15,7 +15,7 @@ export const ANIMATION_SPEED = 1 / 10;
 /**
  * 状态：每组动画的承接容器
  */
-export default class State{
+export class State{
     private _animationClip:AnimationClip;
     private _fsm:StateMachine;
     private _path:string;

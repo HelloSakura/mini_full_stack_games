@@ -16,8 +16,11 @@ export enum ParamsNameEnum {
   Attack = "Attack",
 }
 
+//角色状态类型
 export enum EntityStateEnum {
-  Idle = "Idle"
+  Idle = "Idle",
+  Run = 'Run',
+  Attack = 'Attack'
 }
   
 export enum EventEnum {
@@ -28,4 +31,11 @@ export enum EventEnum {
 export enum PrefabPathEnum {
   Actor1 = 'prefab/Actor',
   Map = 'prefab/Map'
+}
+
+export enum TexturePathEnum {
+  Actor1Idle = 'texture/actor/actor1/idle',
+  Actor1Run = 'texture/actor/actor1/run',
+  Actor2Idle = 'texture/actor/actor2/idle',
+  Actor2Run = 'texture/actor/actor2/run',
 }

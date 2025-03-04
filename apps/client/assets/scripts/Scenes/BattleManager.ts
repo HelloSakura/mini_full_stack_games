@@ -4,12 +4,12 @@
 * @date: 2025/02/21
 */
 
-import { _decorator, Component, instantiate, Node, Prefab} from "cc";
+import { _decorator, Component, instantiate, Node, Prefab, SpriteFrame} from "cc";
 import { DataManager } from "../Global/DataManager";
 import { JoystickManager } from "../UI/JoystickManager";
 import { ResourceManager } from "../Global/ResourceManager";
 import { ActorManager } from "../Entity/Actor/ActorManager";
-import { PrefabPathEnum } from "../Enum/Enum";
+import { PrefabPathEnum, TexturePathEnum } from "../Enum/Enum";
 import { EntityTypeEnum } from "../Common";
 
 const { ccclass, property } = _decorator;
@@ -87,12 +87,23 @@ export class BattleManager extends Component{
 
     private async _loadRes(){
         const list = [];
+        //加载预设
         for(const type in PrefabPathEnum){
             const p = ResourceManager.Instance.loadRes(PrefabPathEnum[type], Prefab).then((Prefab)=>{
                 DataManager.Instance.PrefabMap.set(type, Prefab);
             });
             list.push(p);
         }
+        
+
+        //加载贴图
+        for(const type in TexturePathEnum){
+            const p = ResourceManager.Instance.loadDir(TexturePathEnum[type], SpriteFrame).then((spriteFrames)=>{
+                DataManager.Instance.TextureMap.set(type, spriteFrames);
+            });
+            list.push(p);
+        }
         await Promise.all(list);
+
     }
 }

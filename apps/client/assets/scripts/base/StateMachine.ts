@@ -6,9 +6,10 @@
 
 import { _decorator, Component, Animation } from "cc";
 import { FsmParamTypeEnum } from "../Enum/Enum";
-import State from "./State";
 import SubStateMachine from "./SubStateMachine";
-import { EntityTypeEnum } from "../Common/Common";
+import { StateTypeEnum } from "../Common/Common";
+import { EntityTypeEnum } from "../Common";
+import { State } from "./State";
 
 const { ccclass } = _decorator
 
@@ -42,17 +43,17 @@ export const getInitParamsNumber = () => {
  * 子状态机：套娃执行run方法
  */
 @ccclass('StateMachine')
-export default abstract class StateMachine extends Component{
+export abstract class StateMachine extends Component{
     //基本参数
     //当前状态
-    private _curState: State | SubStateMachine = null;
+    protected _curState: State | SubStateMachine = null;
     //参数？？
-    private _params: Map<string, IParamsValue> = new Map();
+    protected _params: Map<string, IParamsValue> = new Map();
     //??
-    private _stateMachines: Map<string, State | SubStateMachine> = new Map();
+    protected _stateMachines: Map<string, State | SubStateMachine> = new Map();
     //当前状态动画机
-    private _animation: Animation = null;
-    private _type: EntityTypeEnum = EntityTypeEnum.Init;
+    protected _animation: Animation = null;
+    protected _type: EntityTypeEnum = EntityTypeEnum.Init;
     
 
     /**

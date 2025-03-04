@@ -4,6 +4,6 @@
 * @date: 2025/02/06
 */
 
-export enum EntityTypeEnum{
+export enum StateTypeEnum{
     Init = 0
 }
