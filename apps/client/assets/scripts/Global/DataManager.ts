@@ -5,10 +5,10 @@
 */
 
 import { Prefab, SpriteFrame } from "cc";
-import { Singleton } from "../Base/Singleton";
 import { EntityTypeEnum, IActorMove, IState } from "../Common";
 import { JoystickManager } from "../UI/JoystickManager";
 import { ActorManager } from "../Entity/Actor/ActorManager";
+import { Singleton } from "../Base/Singleton";
 
 const ACTOR_SPEED = 1;
 
