@@ -5,11 +5,11 @@
 */
 
 import { _decorator, Node, Animation, AnimationClip} from "cc";
-import {getInitParamsTrigger, StateMachine } from "../../Base/StateMachine";
 import { StateTypeEnum } from "../../Common/Common";
 import { EntityStateEnum, ParamsNameEnum } from "../../Enum/Enum";
 import { EntityTypeEnum } from "../../Common";
-import { State } from "../../Base/State";
+import { State } from "../../base/State";
+import { StateMachine, getInitParamsTrigger } from "../../base/StateMachine";
 
 
 const {ccclass, property} = _decorator
@@ -38,6 +38,7 @@ export class ActorStateMachine extends StateMachine{
 
     }
 
+    
     public run(){
 
     }
