@@ -8,9 +8,8 @@ import { _decorator, Node, Animation, AnimationClip} from "cc";
 import { StateTypeEnum } from "../../Common/Common";
 import { EntityStateEnum, ParamsNameEnum } from "../../Enum/Enum";
 import { EntityTypeEnum } from "../../Common";
-import { State } from "../../base/State";
-import { StateMachine, getInitParamsTrigger } from "../../base/StateMachine";
-
+import { State } from "../../Base/State";
+import { StateMachine, getInitParamsTrigger } from "../../Base/StateMachine";
 
 const {ccclass, property} = _decorator
 export class ActorStateMachine extends StateMachine{
