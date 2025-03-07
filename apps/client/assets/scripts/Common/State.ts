@@ -15,7 +15,7 @@ export interface IActor{
     id:number,
     position:IVec2,
     direction:IVec2,
-    type:EntityTypeEnum
+    type:EntityTypeEnum,    //角色类型，在State里面通过类型区分出路径，决定加载哪一种图片
 }
 
 

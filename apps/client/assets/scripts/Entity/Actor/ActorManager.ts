@@ -15,7 +15,6 @@ const { ccclass, property } = _decorator;
 
 @ccclass('ActorManager')
 export class ActorManager extends EntityManager{
-    
 
     init(data:IActor){
         this._fsm = this.node.addComponent(ActorStateMachine);
@@ -35,6 +34,10 @@ export class ActorManager extends EntityManager{
                 dt:10
             })
             console.log(DataManager.Instance.State.actors[0].position.x, DataManager.Instance.State.actors[0].position.y);
+            this.State = EntityStateEnum.Run;
+        }
+        else{
+            this.State = EntityStateEnum.Idle;
         }
     }
 

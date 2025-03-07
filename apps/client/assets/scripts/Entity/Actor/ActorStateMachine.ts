@@ -40,7 +40,23 @@ export class ActorStateMachine extends StateMachine{
 
     
     public run(){
-
+        switch(this._curState){
+            case this._stateMachines.get(ParamsNameEnum.Idle):
+            case this._stateMachines.get(ParamsNameEnum.Run):
+                if(this._params.get(ParamsNameEnum.Run).value){
+                    this.CurrentState = this._stateMachines.get(ParamsNameEnum.Run);
+                }
+                else if(this._params.get(ParamsNameEnum.Idle).value){
+                    this.CurrentState = this._stateMachines.get(ParamsNameEnum.Idle);
+                }
+                else{
+                    this.CurrentState = this._curState;
+                }
+                break
+            default:
+                this.CurrentState = this._stateMachines.get(ParamsNameEnum.Idle);
+                break;
+        }
     }
 
 }

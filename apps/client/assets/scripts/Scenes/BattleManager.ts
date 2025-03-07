@@ -104,6 +104,5 @@ export class BattleManager extends Component{
             list.push(p);
         }
         await Promise.all(list);
-
     }
 }
