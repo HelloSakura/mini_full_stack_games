@@ -23,6 +23,10 @@ export class State{
     private _wrapMode:AnimationClip.WrapMode = AnimationClip.WrapMode.Normal;
     private _force:boolean;
 
+    //#region 
+    private _count:number = 0;
+    //#endregion
+
 
     constructor(fsm:StateMachine, path:string, wrapMode:AnimationClip.WrapMode, force:boolean = false){
         this._fsm = fsm;
@@ -36,11 +40,12 @@ export class State{
         //添加轨道路径，指定了在 运行时 如何从当前节点对象寻址到目标对象
         /**
          * 1. 找到节点上的Sprite组件
-         * 2. 找到SpriteFrames属性
+         * 2. 找到spriteFrames属性 属性名小写，煞笔Cocos
          */
-        track.path = new animation.TrackPath().toComponent(Sprite).toProperty('SpriteFrame');
+        track.path = new animation.TrackPath().toComponent(Sprite).toProperty('spriteFrame');
         const spriteFrames = DataManager.Instance.TextureMap.get(this._path);
         const frames: Array<[number, SpriteFrame]> = sortSpriteFrame(spriteFrames).map((item, index) => [index * ANIMATION_SPEED, item]);
+        //const frames:Array<[number, SpriteFrame]> = spriteFrames.map((item:SpriteFrame, index:number)=>[ANIMATION_SPEED*index, item]);
         track.channel.curve.assignSorted(frames);
 
         //添加轨道
@@ -53,13 +58,12 @@ export class State{
 
 
     run(){
-        // TODO: 为啥子这样写
-        if(this._fsm.Animation.defaultClip?.name === this._animationClip.name && !this._force){
+        if(this._fsm.AnimComponent.defaultClip?.name === this._animationClip.name && !this._force){
             return;
         }
-        this._fsm.Animation.defaultClip = this._animationClip;
-        this._fsm.Animation.play();
+        this._fsm.AnimComponent.defaultClip = this._animationClip;
+        //console.log('before play:', this._fsm.AnimComponent.getState(this._animationClip.name));
+        this._fsm.AnimComponent.play();
+        //console.log('after play:', this._fsm.AnimComponent.getState(this._animationClip.name));
     }
-
-
 }

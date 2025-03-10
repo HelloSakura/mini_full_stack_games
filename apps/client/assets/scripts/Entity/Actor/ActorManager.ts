@@ -4,7 +4,7 @@
 * @date: 2025/02/21
 */
 
-import { _decorator, Component} from "cc";
+import { _decorator, Component, Animation} from "cc";
 import { DataManager } from "../../Global/DataManager";
 import { IActor, InputTypeEnum } from "../../Common";
 import { EntityManager } from "../../Base/EntityManager";
@@ -19,7 +19,7 @@ export class ActorManager extends EntityManager{
     init(data:IActor){
         this._fsm = this.node.addComponent(ActorStateMachine);
         this._fsm.init(data.type);      //初始化状态机
-        this._state = EntityStateEnum.Idle;     //设置初始状态为Idle状态
+        this.State = EntityStateEnum.Idle;     //设置初始状态为Idle状态
     }
 
     tick(dt:number){
@@ -33,12 +33,13 @@ export class ActorManager extends EntityManager{
                 direction:{x,y},
                 dt:10
             })
-            console.log(DataManager.Instance.State.actors[0].position.x, DataManager.Instance.State.actors[0].position.y);
+            //console.log(DataManager.Instance.State.actors[0].position.x, DataManager.Instance.State.actors[0].position.y);
             this.State = EntityStateEnum.Run;
         }
         else{
             this.State = EntityStateEnum.Idle;
         }
+        let anim = this.node.getComponent(Animation);
     }
 
     render(data:IActor){

@@ -52,7 +52,7 @@ export abstract class StateMachine extends Component{
     //??
     protected _stateMachines: Map<string, State | SubStateMachine> = new Map();
     //当前状态动画机
-    protected _animation: Animation = null;
+    protected _animComponent: Animation = null;
     protected _type: EntityTypeEnum = EntityTypeEnum.Init;
     
 
@@ -77,8 +77,8 @@ export abstract class StateMachine extends Component{
         }
     }
 
-    public get Animation():Animation{
-        return this._animation;
+    public get AnimComponent():Animation{
+        return this._animComponent;
     }
 
     public get Type(): EntityTypeEnum{
