@@ -25,7 +25,7 @@ export class WeaponManager extends EntityManager{
         this._point = this.node.getChildByName("Point");
 
         this._fsm = this._body.addComponent(WeaponStateMachine);
-        this._fsm.init(data.type);      //初始化状态机
+        this._fsm.init(data.weaponType);      //初始化状态机
         this.State = EntityStateEnum.Idle;     //设置初始状态为Idle状态
 
         

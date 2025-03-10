@@ -6,11 +6,12 @@
 
 import { _decorator, Component, Animation, instantiate} from "cc";
 import { DataManager } from "../../Global/DataManager";
-import { IActor, InputTypeEnum } from "../../Common";
+import { EntityTypeEnum, IActor, InputTypeEnum } from "../../Common";
 import { EntityManager } from "../../Base/EntityManager";
 import { ActorStateMachine } from "./ActorStateMachine";
 import { EntityStateEnum } from "../../Enum/Enum";
 import { WeaponManager } from "../Weapon/WeaponManager";
+import { rad2Angle } from "../../Utils/Utils";
 
 const { ccclass, property } = _decorator;
 
@@ -23,10 +24,10 @@ export class ActorManager extends EntityManager{
         this.State = EntityStateEnum.Idle;     //设置初始状态为Idle状态
 
         //根据预设，生成武器并初始化
-        const prefab = DataManager.Instance.PrefabMap.get(data.weaponType);
+        const prefab = DataManager.Instance.PrefabMap.get(EntityTypeEnum.Weapon1);
         const weapon = instantiate(prefab);
         weapon.setParent(this.node);
-        this._weaponManager = weapon.getComponent(WeaponManager);
+        this._weaponManager = weapon.addComponent(WeaponManager);
         this._weaponManager.init(data);
     }
 
@@ -57,5 +58,10 @@ export class ActorManager extends EntityManager{
             this.node.setScale(direction.x > 0 ? 1:-1, 1)
         }
 
+        const side = Math.sqrt(direction.x ** 2 + direction.y ** 2);
+        const rad = Math.asin(direction.y / side);
+        const angle = rad2Angle(rad);
+
+        this._weaponManager.node.setRotationFromEuler(0, 0, angle);
     }
 }
