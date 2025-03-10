@@ -4,22 +4,30 @@
 * @date: 2025/02/21
 */
 
-import { _decorator, Component, Animation} from "cc";
+import { _decorator, Component, Animation, instantiate} from "cc";
 import { DataManager } from "../../Global/DataManager";
 import { IActor, InputTypeEnum } from "../../Common";
 import { EntityManager } from "../../Base/EntityManager";
 import { ActorStateMachine } from "./ActorStateMachine";
 import { EntityStateEnum } from "../../Enum/Enum";
+import { WeaponManager } from "../Weapon/WeaponManager";
 
 const { ccclass, property } = _decorator;
 
 @ccclass('ActorManager')
 export class ActorManager extends EntityManager{
-
+    private _weaponManager:WeaponManager;
     init(data:IActor){
         this._fsm = this.node.addComponent(ActorStateMachine);
         this._fsm.init(data.type);      //初始化状态机
         this.State = EntityStateEnum.Idle;     //设置初始状态为Idle状态
+
+        //根据预设，生成武器并初始化
+        const prefab = DataManager.Instance.PrefabMap.get(data.weaponType);
+        const weapon = instantiate(prefab);
+        weapon.setParent(this.node);
+        this._weaponManager = weapon.getComponent(WeaponManager);
+        this._weaponManager.init(data);
     }
 
     tick(dt:number){

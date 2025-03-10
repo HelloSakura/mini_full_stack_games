@@ -30,7 +30,9 @@ export enum EventEnum {
 //PrefabPathEnum的key必须和EntityTypeEnum的value一致
 export enum PrefabPathEnum {
   Actor1 = 'prefab/Actor',
-  Map = 'prefab/Map'
+  Map = 'prefab/Map',
+  Weapon1 = 'prefab/Weapon'
+
 }
 
 export enum TexturePathEnum {
@@ -38,4 +40,8 @@ export enum TexturePathEnum {
   Actor1Run = 'texture/actor/actor1/run',
   Actor2Idle = 'texture/actor/actor2/idle',
   Actor2Run = 'texture/actor/actor2/run',
+  Weapon1Idle = 'texture/weapon/weapon1/idle',
+  Weapon1Attack = 'texture/weapon/weapon1/attack',
+  Weapon2Idle = 'texture/weapon/weapon2/idle',
+  Weapon2Attack = 'texture/weapon/weapon2/attack',
 }

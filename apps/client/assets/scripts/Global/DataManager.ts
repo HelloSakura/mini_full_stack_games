@@ -24,7 +24,8 @@ export class DataManager extends Singleton<DataManager>() {
                 id:1,
                 position:{x:0, y:0},
                 direction:{x:0, y:0},
-                type:EntityTypeEnum.Actor1
+                type:EntityTypeEnum.Actor1,
+                weaponType:EntityTypeEnum.Weapon1
             }
         ]
     }

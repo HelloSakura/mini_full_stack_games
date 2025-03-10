@@ -2,7 +2,10 @@
 * @author Lucida
 * @description: 战场管理器，负责管理战场中每个单位
 * @date: 2025/02/21
+* 核心步骤：加载资源，初始化地图、update(dt)渲染每个对象（render，tick）
 */
+
+
 
 import { _decorator, Component, instantiate, Node, Prefab, SpriteFrame} from "cc";
 import { DataManager } from "../Global/DataManager";
