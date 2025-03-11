@@ -1,3 +1,8 @@
+/**
+* @author Lucida
+* @description: 摇杆控制
+* @date: 2025/03/01
+*/
 import { _decorator, Component, EventTouch, Input, input, Node, UITransform, Vec2 } from 'cc';
 const { ccclass, property } = _decorator;
 

@@ -49,7 +49,7 @@ export abstract class StateMachine extends Component{
     protected _curState: State | SubStateMachine = null;
     //参数？？
     protected _params: Map<string, IParamsValue> = new Map();
-    //??
+    //状态机图
     protected _stateMachines: Map<string, State | SubStateMachine> = new Map();
     //当前状态动画机
     protected _animComponent: Animation = null;
