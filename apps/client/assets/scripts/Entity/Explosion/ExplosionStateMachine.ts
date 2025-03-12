@@ -1,7 +1,7 @@
 /**
 * @author Lucida
-* @description: 武器状态机
-* @date: 2025/03/10
+* @description: 爆炸状态机
+* @date: 2025/03/12
 */
 
 import { _decorator, Node, Animation, AnimationClip} from "cc";
@@ -10,10 +10,9 @@ import { EntityStateEnum, ParamsNameEnum } from "../../Enum/Enum";
 import { EntityTypeEnum } from "../../Common";
 import { State } from "../../Base/State";
 import { StateMachine, getInitParamsTrigger } from "../../Base/StateMachine";
-import { WeaponManager } from "./WeaponManager";
 
 const {ccclass, property} = _decorator
-export class WeaponStateMachine extends StateMachine{
+export class ExplosionStateMachine extends StateMachine{
 
     public init(type:EntityTypeEnum){
         this._type = type;
@@ -26,21 +25,16 @@ export class WeaponStateMachine extends StateMachine{
 
     private _initParams(){
         this._params.set(ParamsNameEnum.Idle, getInitParamsTrigger());
-        this._params.set(ParamsNameEnum.Attack, getInitParamsTrigger());
     }
 
     private _initStateMachines(){
-        this._stateMachines.set(ParamsNameEnum.Idle, new State(this, `${this._type}${EntityStateEnum.Idle}`, AnimationClip.WrapMode.Normal, true));
-        this._stateMachines.set(ParamsNameEnum.Attack, new State(this, `${this._type}${EntityStateEnum.Attack}`, AnimationClip.WrapMode.Normal, true));
+        this._stateMachines.set(ParamsNameEnum.Idle, new State(this, `${this._type}${EntityStateEnum.Idle}`, AnimationClip.WrapMode.Normal));
     }
 
     private _initAnimationEvent(){
+        //动画播放完毕销毁节点
         this._animComponent.on(Animation.EventType.FINISHED, ()=>{
-            //如果当前状态为攻击状态，播放完成后重置为 idle状态
-            if(this._animComponent.defaultClip.name.includes(EntityStateEnum.Attack)){
-                this.CurrentState = this._stateMachines.get(ParamsNameEnum.Idle);
-                //this.node.parent.getComponent(WeaponManager).State = EntityStateEnum.Idle;
-            }
+            this.node.destroy();
         });
     }
 
@@ -48,11 +42,7 @@ export class WeaponStateMachine extends StateMachine{
     public run(){
         switch(this._curState){
             case this._stateMachines.get(ParamsNameEnum.Idle):
-            case this._stateMachines.get(ParamsNameEnum.Attack):
-                if(this._params.get(ParamsNameEnum.Attack).value){
-                    this.CurrentState = this._stateMachines.get(ParamsNameEnum.Attack);
-                }
-                else if(this._params.get(ParamsNameEnum.Idle).value){
+                if(this._params.get(ParamsNameEnum.Idle).value){
                     this.CurrentState = this._stateMachines.get(ParamsNameEnum.Idle);
                 }
                 else{

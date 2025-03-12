@@ -114,6 +114,9 @@ export class DataManager extends Singleton<DataManager>() {
             bulleType:this._actorMap.get(owner).BulletType
         }
         //console.log(bullet);
+        //产生子弹触发事件
+        EventManager.Instance.emit(EventEnum.BulletBorn, owner);
+
         //推入数组
         this._state.bullets.push(bullet);
     }

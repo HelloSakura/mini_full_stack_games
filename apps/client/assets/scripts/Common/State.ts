@@ -28,6 +28,12 @@ export interface IBullet{
     bulleType:EntityTypeEnum,    //子弹类型
 }
 
+export interface IExplosion{
+    id:number,
+    position:IVec2
+    explosionType:EntityTypeEnum
+}
+
 
 export interface IState{
     actors:IActor[],

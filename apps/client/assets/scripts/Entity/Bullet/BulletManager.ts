@@ -4,13 +4,15 @@
 * @date: 2025/03/10
 */
 
-import { _decorator, IVec2} from "cc";
+import { _decorator, instantiate, IVec2} from "cc";
 import { EntityTypeEnum, IBullet } from "../../Common";
 import { EntityManager } from "../../Base/EntityManager";
 import { BulletStateMachine } from "./BulletStateMachine";
 import { EntityStateEnum, EventEnum } from "../../Enum/Enum";
 import { rad2Angle } from "../../Utils/Utils";
 import { EventManager } from "../../Global/EventManager";
+import { DataManager } from "../../Global/DataManager";
+import { ExplosionManager } from "../Explosion/ExplosionManager";
 
 const { ccclass, property } = _decorator;
 
@@ -56,5 +58,19 @@ export class BulletManager extends EntityManager{
     private _handleExplosionBorn(id:number, pos:IVec2){
         if(this._bulletID !== id) return;
         
+        //初始化explosion node
+        const prefab = DataManager.Instance.PrefabMap.get(EntityTypeEnum.Explosion);
+        const explosion = instantiate(prefab);
+        explosion.setParent(DataManager.Instance.Stage);
+        const component = explosion.addComponent(ExplosionManager);
+        component.init({
+            id:id,
+            position:pos,
+            explosionType:EntityTypeEnum.Explosion
+        });
+        
+        //回收子弹
+        DataManager.Instance.BulletMap.delete(this._bulletID);
+        this.node.destroy();
     }
 }
