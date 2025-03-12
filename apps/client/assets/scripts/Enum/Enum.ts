@@ -26,6 +26,7 @@ export enum EntityStateEnum {
 export enum EventEnum {
   Init = 'Init',
   WeaponShoot = 'WeaponShoot',  //开火
+  ExplosionBorn = 'ExplosionBorn', //子弹爆炸
 }
 
 //PrefabPathEnum的key必须和EntityTypeEnum的value一致
@@ -35,6 +36,7 @@ export enum PrefabPathEnum {
   Weapon1 = 'prefab/Weapon',
   //Bullet1 = 'prefab/Bullet1',
   Bullet2 = 'prefab/Bullet2',
+  Explosion = 'prefab/Explosion'
 }
 
 export enum TexturePathEnum {
@@ -47,5 +49,6 @@ export enum TexturePathEnum {
   Weapon2Idle = 'texture/weapon/weapon2/idle',
   Weapon2Attack = 'texture/weapon/weapon2/attack',
   Bullet1Idle = 'texture/bullet/bullet1',
-  Bullet2Idle = 'texture/bullet/bullet2'
+  Bullet2Idle = 'texture/bullet/bullet2',
+  ExplosionIdle = 'texture/explosion',
 }

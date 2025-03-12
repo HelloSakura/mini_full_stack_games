@@ -10,6 +10,8 @@ import { JoystickManager } from "../UI/JoystickManager";
 import { ActorManager } from "../Entity/Actor/ActorManager";
 import { Singleton } from "../Base/Singleton";
 import { BulletManager } from "../Entity/Bullet/BulletManager";
+import { EventManager } from "./EventManager";
+import { EventEnum } from "../Enum/Enum";
 
 const ACTOR_SPEED = 100;        //人物移速
 const BULLET_SPEED = 500;       //子弹移速
@@ -125,6 +127,8 @@ export class DataManager extends Singleton<DataManager>() {
             //子弹穿过地图
             if(Math.abs(2 * bullet.position.x) > MAP_WIDTH || Math.abs(2 * bullet.position.y) > MAP_HEIGHT){
                 bullets.splice(i, 1);
+                //回收子弹时触发子弹爆炸事件
+                EventManager.Instance.emit(EventEnum.ExplosionBorn, bullet.id, bullet.position);
             }
         }
 
