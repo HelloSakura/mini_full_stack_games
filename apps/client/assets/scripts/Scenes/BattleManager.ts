@@ -13,7 +13,8 @@ import { JoystickManager } from "../UI/JoystickManager";
 import { ResourceManager } from "../Global/ResourceManager";
 import { ActorManager } from "../Entity/Actor/ActorManager";
 import { PrefabPathEnum, TexturePathEnum } from "../Enum/Enum";
-import { EntityTypeEnum } from "../Common";
+import { EntityTypeEnum, InputTypeEnum } from "../Common";
+import { BulletManager } from "../Entity/Bullet/BulletManager";
 
 const { ccclass, property } = _decorator;
 
@@ -25,7 +26,7 @@ export class BattleManager extends Component{
     private _shouldUpdate:boolean = false;
 
     onLoad(){
-        this._stage = this.node.getChildByName("Stage");
+        DataManager.Instance.Stage = this._stage = this.node.getChildByName("Stage");   //获取舞台UI节点
         this._UI = this.node.getChildByName("UI");
         this._stage.destroyAllChildren();
         DataManager.Instance.JoystickManager = this._UI.getComponentInChildren(JoystickManager);
@@ -49,7 +50,11 @@ export class BattleManager extends Component{
     }
 
     private _tick(dt:number){
-        this._tickActor(dt)
+        this._tickActor(dt);
+        DataManager.Instance.applyInput({
+            type:InputTypeEnum.TimePast,
+            dt:dt
+        })
     }
 
     private _tickActor(dt:number){
@@ -62,6 +67,7 @@ export class BattleManager extends Component{
 
     private _render(){
         this._renderActor();
+        this._renderBullet();
     }
 
     private _renderActor(){
@@ -70,9 +76,9 @@ export class BattleManager extends Component{
             const {id, type} = data;
             if(!am){
                 const prefab = DataManager.Instance.PrefabMap.get(type);
-                const node = instantiate(prefab);
-                node.setParent(this._stage);
-                am = node.addComponent(ActorManager);
+                const actor = instantiate(prefab);
+                actor.setParent(this._stage);
+                am = actor.addComponent(ActorManager);
                 DataManager.Instance.ActorMap.set(id, am);
                 am.init(data);
             }
@@ -81,6 +87,25 @@ export class BattleManager extends Component{
             }
         }
     }
+
+    private _renderBullet(){
+        for(const data of DataManager.Instance.State.bullets){
+            let bm = DataManager.Instance.BulletMap.get(data.id);
+            const {id, bulleType} = data;
+            if(!bm){
+                const prefab = DataManager.Instance.PrefabMap.get(bulleType);
+                const bullet = instantiate(prefab);
+                bullet.setParent(this._stage);
+                bm = bullet.addComponent(BulletManager);
+                DataManager.Instance.BulletMap.set(id, bm);
+                bm.init(data);
+            }
+            else{
+                bm.render(data);
+            }
+        }
+    }
+
 
     private _initMap(){
         const prefab = DataManager.Instance.PrefabMap.get(EntityTypeEnum.Map);
@@ -98,7 +123,6 @@ export class BattleManager extends Component{
             list.push(p);
         }
         
-
         //加载贴图
         for(const type in TexturePathEnum){
             const p = ResourceManager.Instance.loadDir(TexturePathEnum[type], SpriteFrame).then((spriteFrames)=>{

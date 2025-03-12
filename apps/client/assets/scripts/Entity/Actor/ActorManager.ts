@@ -18,6 +18,7 @@ const { ccclass, property } = _decorator;
 @ccclass('ActorManager')
 export class ActorManager extends EntityManager{
     private _weaponManager:WeaponManager;
+    private _bulletType:EntityTypeEnum;
     init(data:IActor){
         this._fsm = this.node.addComponent(ActorStateMachine);
         this._fsm.init(data.type);      //初始化状态机
@@ -29,6 +30,17 @@ export class ActorManager extends EntityManager{
         weapon.setParent(this.node);
         this._weaponManager = weapon.addComponent(WeaponManager);
         this._weaponManager.init(data);
+
+        //设置对应的子弹类型
+        this._bulletType = data.bulletType;
+    }
+
+    public get BulletType():EntityTypeEnum{
+        return this._bulletType;
+    }
+
+    public set BulletType(type:EntityTypeEnum){
+        this._bulletType = type;
     }
 
     tick(dt:number){
@@ -40,7 +52,7 @@ export class ActorManager extends EntityManager{
                 id:1,
                 type:InputTypeEnum.ActorMove,
                 direction:{x,y},
-                dt:10
+                dt:dt
             })
             //console.log(DataManager.Instance.State.actors[0].position.x, DataManager.Instance.State.actors[0].position.y);
             this.State = EntityStateEnum.Run;
@@ -48,7 +60,6 @@ export class ActorManager extends EntityManager{
         else{
             this.State = EntityStateEnum.Idle;
         }
-        let anim = this.node.getComponent(Animation);
     }
 
     render(data:IActor){
