@@ -28,12 +28,23 @@ export class DataManager extends Singleton<DataManager>() {
     private _bulletMap:Map<number, BulletManager> = new Map();
     private _prefabMap:Map<string, Prefab> = new Map();
     private _stage:Node;    //舞台
+
+    //玩家ID，登陆的时候获取，鉴别身份
+    private _selfPlayerID:number = 1;
     
     private _state:IState = {
         actors:[
             {
                 id:1,
-                position:{x:0, y:0},
+                position:{x:150, y:150},
+                direction:{x:0, y:0},
+                type:EntityTypeEnum.Actor1,
+                weaponType:EntityTypeEnum.Weapon1,
+                bulletType:EntityTypeEnum.Bullet2
+            },
+            {
+                id:2,
+                position:{x:-150, y:-150},
                 direction:{x:0, y:0},
                 type:EntityTypeEnum.Actor1,
                 weaponType:EntityTypeEnum.Weapon1,
@@ -42,6 +53,11 @@ export class DataManager extends Singleton<DataManager>() {
         ],
         bullets:[],
         nextBulletID:1,
+    }
+
+
+    public get SelfPlayerID():number{
+        return this._selfPlayerID;
     }
 
     public get Stage():Node{

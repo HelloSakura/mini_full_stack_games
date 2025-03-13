@@ -17,9 +17,11 @@ const { ccclass, property } = _decorator;
 
 @ccclass('ActorManager')
 export class ActorManager extends EntityManager{
+    private _actorID:number;
     private _weaponManager:WeaponManager;
     private _bulletType:EntityTypeEnum;
     init(data:IActor){
+        this._actorID = data.id;
         this._fsm = this.node.addComponent(ActorStateMachine);
         this._fsm.init(data.type);      //初始化状态机
         this.State = EntityStateEnum.Idle;     //设置初始状态为Idle状态
@@ -44,6 +46,9 @@ export class ActorManager extends EntityManager{
     }
 
     tick(dt:number){
+        //根据playerID决定渲染
+        if(this._actorID !== DataManager.Instance.SelfPlayerID) return;
+
         //没有用事件，而是根据摇杆的标量来判断是否有移动
         if(DataManager.Instance.JoystickManager.input.length() > 0){
             const {x, y} = DataManager.Instance.JoystickManager.input

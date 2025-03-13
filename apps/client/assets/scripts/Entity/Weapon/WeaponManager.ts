@@ -35,9 +35,15 @@ export class WeaponManager extends EntityManager{
         EventManager.Instance.on(EventEnum.BulletBorn, this._handleBulletBorn, this);
     }
 
+    onDestroy(){
+        EventManager.Instance.off(EventEnum.WeaponShoot, this._handleWeaponShoot, this);
+        EventManager.Instance.off(EventEnum.BulletBorn, this._handleBulletBorn, this);
+    }
+
 
     private _handleWeaponShoot(){
-        //每次接受射击事件，生成了新的bullet Data
+        //判断是否是自己
+        if(this._owner !== DataManager.Instance.SelfPlayerID) return;
 
         //世界坐标转舞台坐标
         const pointWorldPos = this._point.getWorldPosition();
@@ -45,7 +51,7 @@ export class WeaponManager extends EntityManager{
         //计算方向
         const anchorWorldPos = this._anchor.getWorldPosition();
         const direction = new Vec2(pointWorldPos.x - anchorWorldPos.x, pointWorldPos.y - anchorWorldPos.y).normalize();
-
+        //每次接受射击事件，在当前位置生成了新的bullet Data
         DataManager.Instance.applyInput({
             owner:this._owner,
             type:InputTypeEnum.WeaponShoot,
