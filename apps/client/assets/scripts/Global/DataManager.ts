@@ -19,7 +19,10 @@ const BULLET_SPEED = 500;       //子弹移速
 const MAP_WIDTH = 1280;     //地图-宽
 const MAP_HEIGHT = 720;     //地图-高
 
+const ACTOR_RADIUS = 50;    //人物半径
+const BULLET_RADIUS = 20;   //子弹半径
 
+const BULLET_DAMAGE = 5;    //子弹上海
 
 export class DataManager extends Singleton<DataManager>() {
     private _textureMap:Map<string, SpriteFrame[]> = new Map();
@@ -36,6 +39,7 @@ export class DataManager extends Singleton<DataManager>() {
         actors:[
             {
                 id:1,
+                hp:80,
                 position:{x:150, y:150},
                 direction:{x:0, y:0},
                 type:EntityTypeEnum.Actor1,
@@ -44,6 +48,7 @@ export class DataManager extends Singleton<DataManager>() {
             },
             {
                 id:2,
+                hp:80,
                 position:{x:-150, y:-150},
                 direction:{x:0, y:0},
                 type:EntityTypeEnum.Actor1,
@@ -143,12 +148,30 @@ export class DataManager extends Singleton<DataManager>() {
         //倒序遍历删除子弹，push会一直压在最上面
         for(let i = bullets.length - 1; i >= 0; i--){
             const bullet = bullets[i];
-            //子弹穿过地图
-            if(Math.abs(2 * bullet.position.x) > MAP_WIDTH || Math.abs(2 * bullet.position.y) > MAP_HEIGHT){
-                bullets.splice(i, 1);
-                //回收子弹时触发子弹爆炸事件
-                EventManager.Instance.emit(EventEnum.ExplosionBorn, bullet.id, bullet.position);
+            
+            for(let j = this._state.actors.length - 1; j >= 0; j--){
+                let actor = this._state.actors[j]; 
+                //子弹打中其它玩家，子弹不和自身碰撞
+                if(bullet.owner != actor.id && Math.sqrt((bullet.position.x - actor.position.x) ** 2 + (bullet.position.y - actor.position.y) ** 2) < (BULLET_RADIUS + ACTOR_RADIUS)){
+                    actor.hp -= BULLET_DAMAGE;
+                    //爆炸位置取中点
+                    //EventManager.Instance.emit(EventEnum.ExplosionBorn, bullet.id, (bullet.position.x + actor.position.x)/2,  (bullet.position.y + actor.position.y)/2);
+                    EventManager.Instance.emit(EventEnum.ExplosionBorn, bullet.id, {x:(bullet.position.x + actor.position.x)/2,  y:(bullet.position.y + actor.position.y)/2});
+                    bullets.splice(i, 1);
+                    break;
+                }
+
+                //子弹穿过地图
+                if(Math.abs(2 * bullet.position.x) > MAP_WIDTH || Math.abs(2 * bullet.position.y) > MAP_HEIGHT){
+                    //回收子弹时触发子弹爆炸事件
+                    EventManager.Instance.emit(EventEnum.ExplosionBorn, bullet.id, bullet.position);
+                    bullets.splice(i, 1);
+                    break;
+                }
             }
+
+
+            
         }
 
         //更新子弹

@@ -13,6 +13,7 @@ export interface IVec2{
 
 export interface IActor{
     id:number,  //角色id
+    hp:number,  //角色hp
     position:IVec2,
     direction:IVec2,
     type:EntityTypeEnum,    //角色类型，在State里面通过类型区分出路径，决定加载哪一种图片

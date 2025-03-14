@@ -4,7 +4,7 @@
 * @date: 2025/02/21
 */
 
-import { _decorator, Component, Animation, instantiate} from "cc";
+import { _decorator, Component, Animation, instantiate, ProgressBar} from "cc";
 import { DataManager } from "../../Global/DataManager";
 import { EntityTypeEnum, IActor, InputTypeEnum } from "../../Common";
 import { EntityManager } from "../../Base/EntityManager";
@@ -20,9 +20,11 @@ export class ActorManager extends EntityManager{
     private _actorID:number;
     private _weaponManager:WeaponManager;
     private _bulletType:EntityTypeEnum;
+    private _hpProgress:ProgressBar;
     init(data:IActor){
         this._actorID = data.id;
         this._fsm = this.node.addComponent(ActorStateMachine);
+        this._hpProgress = this.node.getComponentInChildren(ProgressBar);
         this._fsm.init(data.type);      //初始化状态机
         this.State = EntityStateEnum.Idle;     //设置初始状态为Idle状态
 
@@ -79,5 +81,6 @@ export class ActorManager extends EntityManager{
         const angle = rad2Angle(rad);
 
         this._weaponManager.node.setRotationFromEuler(0, 0, angle);
+        this._hpProgress.progress= data.hp / this._hpProgress.totalLength;
     }
 }
