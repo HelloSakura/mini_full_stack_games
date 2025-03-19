@@ -25,16 +25,19 @@ export class BulletManager extends EntityManager{
     init(data:IBullet){
         this._type = data.bulleType;
         this._bulletID = data.id;
-        this._fsm = this.node.addComponent(BulletStateMachine);
+        this._fsm = this.node.getComponent(BulletStateMachine) || this.node.addComponent(BulletStateMachine);
         this._fsm.init(data.bulleType);
         this.State = EntityStateEnum.Idle;
         
         //子弹初始化不显示，避免渲染出来的第一帧出现屏闪的问题
         this.node.active = false;
 
-        EventManager.Instance.on(EventEnum.ExplosionBorn, this._handleExplosionBorn, this);
+        
     }
 
+    onLoad(){
+        EventManager.Instance.on(EventEnum.ExplosionBorn, this._handleExplosionBorn, this);
+    }
 
     onDestroy(){
         EventManager.Instance.off(EventEnum.ExplosionBorn, this._handleExplosionBorn, this);
@@ -66,12 +69,16 @@ export class BulletManager extends EntityManager{
 
         //从对象池获取explosion node
         const explosion = ObjectPoolManager.Instance.get(EntityTypeEnum.Explosion);
-        const component = explosion.getComponent(ExplosionManager) || explosion.addComponent(ExplosionManager);
+        const component:ExplosionManager = explosion.getComponent(ExplosionManager) || explosion.addComponent(ExplosionManager);
         component.init({
             id:id,
             position:pos,
             explosionType:EntityTypeEnum.Explosion
         });
+        
+        
+        //console.log(`BulletMap:${DataManager.Instance.BulletMap.size}`);
+        //console.log(`ret bullet id:${this.node.uuid}`);
         
         //回收子弹
         DataManager.Instance.BulletMap.delete(this._bulletID);

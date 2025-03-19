@@ -31,6 +31,11 @@ export class WeaponManager extends EntityManager{
         this.State = EntityStateEnum.Idle;     //设置初始状态为Idle状态
 
 
+        
+    }
+
+    onLoad(){
+        //onLoad里面保证事件只注册一次
         EventManager.Instance.on(EventEnum.WeaponShoot, this._handleWeaponShoot, this);
         EventManager.Instance.on(EventEnum.BulletBorn, this._handleBulletBorn, this);
     }

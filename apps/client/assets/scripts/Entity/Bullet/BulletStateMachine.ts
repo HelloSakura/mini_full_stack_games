@@ -16,7 +16,7 @@ export class BulletStateMachine extends StateMachine{
 
     public init(type:EntityTypeEnum){
         this._type = type;
-        this._animComponent = this.node.addComponent(Animation);
+        this._animComponent = this.node.getComponent(Animation) ||this.node.addComponent(Animation);
         this._initParams();
         this._initStateMachines();
         this._initAnimationEvent();

@@ -23,7 +23,7 @@ export class ExplosionManager extends EntityManager{
         this._type = data.explosionType;
         this.node.setPosition(data.position.x, data.position.y);
 
-        this._fsm = this.node.addComponent(ExplosionStateMachine);
+        this._fsm = this.node.getComponent(ExplosionStateMachine) || this.node.addComponent(ExplosionStateMachine);
         this._fsm.init(data.explosionType);
         this.State = EntityStateEnum.Idle;
     }
