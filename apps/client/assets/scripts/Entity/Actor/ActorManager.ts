@@ -73,7 +73,8 @@ export class ActorManager extends EntityManager{
         const {direction, position} = data;
         this.node.setPosition(position.x, position.y);
         if(direction.x !== 0){
-            this.node.setScale(direction.x > 0 ? 1:-1, 1)
+            this.node.setScale(direction.x > 0 ? 1:-1, 1);
+            this._hpProgress.node.setScale(direction.x > 0 ? 1:-1, 1);  //保证血条始终从左开始
         }
 
         const side = Math.sqrt(direction.x ** 2 + direction.y ** 2);

@@ -10,6 +10,7 @@ import { EntityStateEnum, ParamsNameEnum } from "../../Enum/Enum";
 import { EntityTypeEnum } from "../../Common";
 import { State } from "../../Base/State";
 import { StateMachine, getInitParamsTrigger } from "../../Base/StateMachine";
+import { ObjectPoolManager } from "../../Global/ObjectPoolManager";
 
 const {ccclass, property} = _decorator
 export class ExplosionStateMachine extends StateMachine{
@@ -32,9 +33,9 @@ export class ExplosionStateMachine extends StateMachine{
     }
 
     private _initAnimationEvent(){
-        //动画播放完毕销毁节点
+        //动画播放完毕将节点返回到对象池
         this._animComponent.on(Animation.EventType.FINISHED, ()=>{
-            this.node.destroy();
+            ObjectPoolManager.Instance.ret(this.node);
         });
     }
 

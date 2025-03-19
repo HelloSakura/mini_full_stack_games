@@ -13,6 +13,7 @@ import { rad2Angle } from "../../Utils/Utils";
 import { EventManager } from "../../Global/EventManager";
 import { DataManager } from "../../Global/DataManager";
 import { ExplosionManager } from "../Explosion/ExplosionManager";
+import { ObjectPoolManager } from "../../Global/ObjectPoolManager";
 
 const { ccclass, property } = _decorator;
 
@@ -59,10 +60,13 @@ export class BulletManager extends EntityManager{
         if(this._bulletID !== id) return;
         
         //初始化explosion node
-        const prefab = DataManager.Instance.PrefabMap.get(EntityTypeEnum.Explosion);
-        const explosion = instantiate(prefab);
-        explosion.setParent(DataManager.Instance.Stage);
-        const component = explosion.addComponent(ExplosionManager);
+        // const prefab = DataManager.Instance.PrefabMap.get(EntityTypeEnum.Explosion);
+        // const explosion = instantiate(prefab);
+        //explosion.setParent(DataManager.Instance.Stage);
+
+        //从对象池获取explosion node
+        const explosion = ObjectPoolManager.Instance.get(EntityTypeEnum.Explosion);
+        const component = explosion.getComponent(ExplosionManager) || explosion.addComponent(ExplosionManager);
         component.init({
             id:id,
             position:pos,
@@ -71,6 +75,7 @@ export class BulletManager extends EntityManager{
         
         //回收子弹
         DataManager.Instance.BulletMap.delete(this._bulletID);
-        this.node.destroy();
+        //返回到对象池中
+        ObjectPoolManager.Instance.ret(this.node);
     }
 }
