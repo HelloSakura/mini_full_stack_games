@@ -29,7 +29,7 @@ export class ExplosionStateMachine extends StateMachine{
     }
 
     private _initStateMachines(){
-        this._stateMachines.set(ParamsNameEnum.Idle, new State(this, `${this._type}${EntityStateEnum.Idle}`, AnimationClip.WrapMode.Normal));
+        this._stateMachines.set(ParamsNameEnum.Idle, new State(this, `${this._type}${EntityStateEnum.Idle}`, AnimationClip.WrapMode.Normal, true));
     }
 
     private _initAnimationEvent(){

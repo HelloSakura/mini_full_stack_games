@@ -46,15 +46,15 @@ export class DataManager extends Singleton<DataManager>() {
                 weaponType:EntityTypeEnum.Weapon1,
                 bulletType:EntityTypeEnum.Bullet2
             },
-            // {
-            //     id:2,
-            //     hp:80,
-            //     position:{x:-150, y:-150},
-            //     direction:{x:0, y:0},
-            //     type:EntityTypeEnum.Actor1,
-            //     weaponType:EntityTypeEnum.Weapon1,
-            //     bulletType:EntityTypeEnum.Bullet2
-            // }
+            {
+                id:2,
+                hp:80,
+                position:{x:-150, y:-150},
+                direction:{x:0, y:0},
+                type:EntityTypeEnum.Actor1,
+                weaponType:EntityTypeEnum.Weapon1,
+                bulletType:EntityTypeEnum.Bullet2
+            }
         ],
         bullets:[],
         nextBulletID:1,
