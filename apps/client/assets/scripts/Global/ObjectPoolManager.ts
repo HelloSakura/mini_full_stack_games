@@ -39,8 +39,7 @@ export class ObjectPoolManager extends Singleton<ObjectPoolManager>(){
             const prefab = DataManager.Instance.PrefabMap.get(type);
             const node = instantiate(prefab);
             node.name = type;
-            const parent = this._objectPool.getChildByName(type + "Pool");
-            node.setParent(parent);
+            node.setParent(this._objectPool.getChildByName(type + "Pool"));
             node.active = true;
             return node;
         }
