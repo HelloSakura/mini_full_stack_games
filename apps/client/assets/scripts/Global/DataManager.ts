@@ -34,6 +34,8 @@ export class DataManager extends Singleton<DataManager>() {
 
     //玩家ID，登陆的时候获取，鉴别身份
     private _selfPlayerID:number = 1;
+    //帧ID
+    private _frameID:number = 0;
     
     private _state:IState = {
         actors:[
@@ -63,6 +65,10 @@ export class DataManager extends Singleton<DataManager>() {
 
     public get SelfPlayerID():number{
         return this._selfPlayerID;
+    }
+
+    public get FrameID():number{
+        return this._frameID++;
     }
 
     public get Stage():Node{
@@ -101,6 +107,7 @@ export class DataManager extends Singleton<DataManager>() {
 
 
     public applyInput(input:IClientInput){
+        console.log(input)
         switch(input.type){
             case InputTypeEnum.ActorMove:
                 this._applyActorMove(input);

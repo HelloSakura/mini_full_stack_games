@@ -28,6 +28,8 @@ export enum EventEnum {
   WeaponShoot = 'WeaponShoot',  //开火
   ExplosionBorn = 'ExplosionBorn', //子弹爆炸,
   BulletBorn = 'BulletBorn',  //子弹产生
+  ClientSync = 'ClientSync',  //客户端同步
+  ServerSync = 'ServerSync',  //服务器同步
 }
 
 //PrefabPathEnum的key必须和EntityTypeEnum的value一致

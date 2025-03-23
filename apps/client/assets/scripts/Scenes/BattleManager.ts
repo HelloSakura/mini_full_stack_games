@@ -12,10 +12,12 @@ import { DataManager } from "../Global/DataManager";
 import { JoystickManager } from "../UI/JoystickManager";
 import { ResourceManager } from "../Global/ResourceManager";
 import { ActorManager } from "../Entity/Actor/ActorManager";
-import { PrefabPathEnum, TexturePathEnum } from "../Enum/Enum";
-import { EntityTypeEnum, InputTypeEnum } from "../Common";
+import { EventEnum, PrefabPathEnum, TexturePathEnum } from "../Enum/Enum";
+import { ApiMsgEnum, EntityTypeEnum, IClientInput, InputTypeEnum } from "../Common";
 import { BulletManager } from "../Entity/Bullet/BulletManager";
 import { ObjectPoolManager } from "../Global/ObjectPoolManager";
+import { NetWorkManager } from "../Global/NetWorkManager";
+import { EventManager } from "../Global/EventManager";
 
 const { ccclass, property } = _decorator;
 
@@ -27,10 +29,6 @@ export class BattleManager extends Component{
     private _shouldUpdate:boolean = false;
 
     onLoad(){
-        DataManager.Instance.Stage = this._stage = this.node.getChildByName("Stage");   //获取舞台UI节点
-        this._UI = this.node.getChildByName("UI");
-        this._stage.destroyAllChildren();
-        DataManager.Instance.JoystickManager = this._UI.getComponentInChildren(JoystickManager);
     }
 
 
@@ -38,9 +36,17 @@ export class BattleManager extends Component{
      * 异步加载的问题，先load资源在update，避坑没有加载玩就在update里面使用
      */
     async start(){
-        await this._loadRes();
-        this._initMap();
-        this._shouldUpdate = true;
+        this._clearGame();
+        await Promise.all([
+            this._connectServer(),
+            this._loadRes(),
+        ]);
+        this._initGame();
+    }
+
+    onDestroy(){
+        EventManager.Instance.off(EventEnum.ClientSync, this._handleClientSync, this);
+        NetWorkManager.Instance.unListen(ApiMsgEnum.MsgServerSync, this._handleServerSync, this);
     }
 
     update(dt){
@@ -48,6 +54,28 @@ export class BattleManager extends Component{
             this._render();
             this._tick(dt);
         }
+    }
+
+
+    /**
+     * 初始化赋值
+     */
+    private _initGame(){
+        DataManager.Instance.JoystickManager = this._UI.getComponentInChildren(JoystickManager);
+        this._initMap();
+        this._shouldUpdate = true;
+
+        EventManager.Instance.on(EventEnum.ClientSync, this._handleClientSync, this);
+        NetWorkManager.Instance.listenMsg(ApiMsgEnum.MsgServerSync, this._handleServerSync, this);
+    }
+
+    /**
+     * 节点回收销毁
+     */
+    private _clearGame(){
+        DataManager.Instance.Stage = this._stage = this.node.getChildByName("Stage");   //获取舞台UI节点
+        this._UI = this.node.getChildByName("UI");
+        this._stage.destroyAllChildren();
     }
 
     private _tick(dt:number){
@@ -134,5 +162,44 @@ export class BattleManager extends Component{
             list.push(p);
         }
         await Promise.all(list);
+    }
+
+
+    //初始化网络服务
+    private async _connectServer(){
+        //网络波动下多次连接
+        if(!(await NetWorkManager.Instance.connect().catch(()=>false))){
+            //连接失败, 递归调用，1秒一次
+            await new Promise((resolve)=>{
+                setTimeout(()=>{
+                    resolve(true);
+                }, 1000);
+            });
+            this._connectServer();
+        }
+        // NetWorkManager.Instance.sendMsg("Client first connect to server");
+        // NetWorkManager.Instance.listenMsg(
+        //     "protocol", 
+        //     (data)=>{
+        //         console.log("client confirm protocol:", data)
+        //     }, 
+        //     this
+        // );
+    }
+
+    //处理客户端同步
+    private _handleClientSync(input:IClientInput){
+        const msg = {
+            input,
+            frameID:DataManager.Instance.FrameID
+        }
+        NetWorkManager.Instance.sendMsg(ApiMsgEnum.MsgClientSync, msg);
+    }
+
+    private _handleServerSync({inputs}:any){
+        //console.log("server sync:", inputs);
+        for(const input of inputs){
+            DataManager.Instance.applyInput(input);
+        }
     }
 }

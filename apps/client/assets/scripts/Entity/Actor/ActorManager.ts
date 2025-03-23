@@ -9,9 +9,10 @@ import { DataManager } from "../../Global/DataManager";
 import { EntityTypeEnum, IActor, InputTypeEnum } from "../../Common";
 import { EntityManager } from "../../Base/EntityManager";
 import { ActorStateMachine } from "./ActorStateMachine";
-import { EntityStateEnum } from "../../Enum/Enum";
+import { EntityStateEnum, EventEnum } from "../../Enum/Enum";
 import { WeaponManager } from "../Weapon/WeaponManager";
 import { rad2Angle } from "../../Utils/Utils";
+import { EventManager } from "../../Global/EventManager";
 
 const { ccclass, property } = _decorator;
 
@@ -54,14 +55,14 @@ export class ActorManager extends EntityManager{
         //没有用事件，而是根据摇杆的标量来判断是否有移动
         if(DataManager.Instance.JoystickManager.input.length() > 0){
             const {x, y} = DataManager.Instance.JoystickManager.input
-            //摇杆在移动
-            DataManager.Instance.applyInput({
-                id:1,
-                type:InputTypeEnum.ActorMove,
-                direction:{x,y},
-                dt:dt
-            })
-            //console.log(DataManager.Instance.State.actors[0].position.x, DataManager.Instance.State.actors[0].position.y);
+            //摇杆在移动，通过事件传送
+            EventManager.Instance.emit(EventEnum.ClientSync, {
+                    id:1,
+                    type:InputTypeEnum.ActorMove,
+                    direction:{x,y},
+                    dt:dt
+                }
+            );
             this.State = EntityStateEnum.Run;
         }
         else{
