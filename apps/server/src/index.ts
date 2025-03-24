@@ -1,10 +1,10 @@
 import { WebSocketServer } from "ws";
-import { symlinkCommon } from "./Utils";
-import {ApiMsgEnum} from "./Common"
+import { symlinkBase, symlinkCommon } from "./Utils";
+import {ApiMsgEnum, NetPort} from "./Common"
 
 symlinkCommon();
 
-const wss = new WebSocketServer({ port: 34287 });
+const wss = new WebSocketServer({ port: NetPort });
 
 let inputs:any[] = []
 

@@ -7,3 +7,5 @@
 export enum StateTypeEnum{
     Init = 0
 }
+
+export const NetPort = 33658;
