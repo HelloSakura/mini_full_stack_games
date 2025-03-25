@@ -41,6 +41,14 @@ export class BattleManager extends Component{
             this._connectServer(),
             this._loadRes(),
         ]);
+        const {success, error, res} = await NetWorkManager.Instance.callApi(ApiMsgEnum.MsgPlayerJoin, "I am player");
+        if(!success){
+            console.log("error:", error);
+            return;
+        }
+        else{
+            console.log("success ret:", res);
+        }
         this._initGame();
     }
 
@@ -185,6 +193,7 @@ export class BattleManager extends Component{
         //     }, 
         //     this
         // );
+        console.log("client connect to server success");
     }
 
     //处理客户端同步

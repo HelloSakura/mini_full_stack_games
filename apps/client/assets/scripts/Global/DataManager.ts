@@ -107,7 +107,7 @@ export class DataManager extends Singleton<DataManager>() {
 
 
     public applyInput(input:IClientInput){
-        console.log(input)
+        //console.log(input)
         switch(input.type){
             case InputTypeEnum.ActorMove:
                 this._applyActorMove(input);

@@ -25,4 +25,5 @@ export enum EntityTypeEnum{
 export enum ApiMsgEnum{
     MsgClientSync = 'MsgClientSync',
     MsgServerSync = 'MsgServerSync',
+    MsgPlayerJoin = 'MsgPlayerJoin',    //玩家加入
 }
