@@ -41,13 +41,13 @@ export class BattleManager extends Component{
             this._connectServer(),
             this._loadRes(),
         ]);
-        const {success, error, res} = await NetWorkManager.Instance.callApi(ApiMsgEnum.MsgPlayerJoin, "I am player");
+        const {success, error, data} = await NetWorkManager.Instance.callApi(ApiMsgEnum.MsgPlayerJoin, "I am player");
         if(!success){
             console.log("error:", error);
             return;
         }
         else{
-            console.log("success ret:", res);
+            console.log("success ret:", data);
         }
         this._initGame();
     }
@@ -206,7 +206,7 @@ export class BattleManager extends Component{
     }
 
     private _handleServerSync({inputs}:any){
-        //console.log("server sync:", inputs);
+        console.log("server sync:", inputs);
         for(const input of inputs){
             DataManager.Instance.applyInput(input);
         }

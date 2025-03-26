@@ -15,7 +15,7 @@ interface IItem {
 
 interface ICallApiRet{
     success:boolean;
-    res?:any,
+    data?:any,
     error?:Error
 }
 

@@ -4,18 +4,23 @@
 * @date: 2025/03/24
 */
 
-import WebSocket, { WebSocketServer } from "ws";
+import {WebSocket, WebSocketServer } from "ws";
 import { Connection } from "./Connection";
-
+import { ApiMsgEnum } from "../Common";
 
 export class GameServer{
 
     private _port:number;
-    private _wss:WebSocketServer;
+    private _wss!:WebSocketServer;
     private _connectionSet:Set<Connection> = new Set();
+    private _apiMap:Map<ApiMsgEnum, Function> = new Map();
 
     constructor(port:number){
         this._port = port;
+    }
+
+    public get ApiMap():Map<ApiMsgEnum, Function>{
+        return this._apiMap;
     }
 
     start(){
@@ -23,6 +28,7 @@ export class GameServer{
             //构造WebSocket并注册各类事件
             this._wss = new WebSocketServer({port:this._port});
             this._wss.on("listening", ()=>{
+                console.log('server listening');
                 resolve(true);
             });
 
@@ -46,4 +52,10 @@ export class GameServer{
             })
         });
     }
+
+    setApi(api:ApiMsgEnum, callback:Function){
+        console.log("server set api:", api, callback);
+        this._apiMap.set(api, callback);
+    }
+
 }

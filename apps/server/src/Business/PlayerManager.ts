@@ -3,3 +3,35 @@
 * @description: 玩家管理，分配id，记录玩家信息
 * @date: 2025/03/24
 */
+
+import { Singleton } from "../Base/Singleton";
+import { Connection } from "../Core";
+import { Player } from "./Player";
+export class PlayerManager extends Singleton<PlayerManager>() {
+    private _nextPlayID;
+    private _playerSet:Set<Player> = new Set();
+    private _playerMap:Map<number, Player> = new Map();
+
+    createPlayer(name:string, connection:Connection){
+        const player = new Player(this._nextPlayID++, name, connection);
+        this._playerSet.add(player);
+        this._playerMap.set(player.PlayerID, player);
+        return player;
+    }
+
+    removePlayer(pid:number){
+        const player = this._playerMap.get(pid);
+        if(player){
+            this._playerSet.delete(player);
+            this._playerMap.delete(pid);
+        }
+    }
+
+    getPlayerView(player:Player){
+        return {
+            playID:player.PlayerID,
+            name:player.Name,
+            roomID:player.RoomID
+        }
+    }
+}

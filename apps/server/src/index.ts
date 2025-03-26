@@ -1,15 +1,20 @@
 import { WebSocketServer } from "ws";
 import { symlinkBase, symlinkCommon } from "./Utils";
 import {ApiMsgEnum, NetPort} from "./Common"
-import { GameServer } from "./Core";
+import { Connection, GameServer } from "./Core";
+import { connect } from "http2";
 
 symlinkCommon();
 
 const server = new GameServer(NetPort);
+server.setApi(ApiMsgEnum.MsgPlayerJoin, (connection:Connection, data:any)=>{
+    return data + "#Server Accepted";
+});
 
 server.start()
 .then(()=>{
     console.log("Server started");
+
 }).catch((e)=>{
     console.log("Server start error:", e);
 });
