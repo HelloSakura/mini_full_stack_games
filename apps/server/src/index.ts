@@ -3,12 +3,16 @@ import { symlinkBase, symlinkCommon } from "./Utils";
 import {ApiMsgEnum, NetPort} from "./Common"
 import { Connection, GameServer } from "./Core";
 import { connect } from "http2";
+import { Player } from "./Business/Player";
+import { PlayerManager } from "./Business/PlayerManager";
 
 symlinkCommon();
 
 const server = new GameServer(NetPort);
 server.setApi(ApiMsgEnum.MsgPlayerJoin, (connection:Connection, data:any)=>{
-    return data + "#Server Accepted";
+    const {name} = data;
+    const player = PlayerManager.Instance.createPlayer(name, connection);
+    PlayerManager.Instance.getPlayerView(player);
 });
 
 server.start()
