@@ -99,3 +99,4 @@ Ws对象中绑定各个事件来处理响应，尤其是ws.onMessage事件，注
 使用webSocket模拟API服务，API服务（异步函数），webSocket（发布订阅模式）
 实现：通过Promise封装回调回调写法，底层封装的还是webSocket，
 通过map来记录事件绑定关系，WebSocket绑定message事件，根据head信息（定义的枚举）去匹配对应的绑定事件并执行对应操作
+***核心代码不应该出现业务逻辑，通过事件的方式完成解耦***

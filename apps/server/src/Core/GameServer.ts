@@ -6,9 +6,10 @@
 
 import {WebSocket, WebSocketServer } from "ws";
 import { Connection } from "./Connection";
-import { ApiMsgEnum } from "../Common";
+import { ApiMsgEnum, IModel } from "../Common";
+import { EventEmitter } from "stream";
 
-export class GameServer{
+export class GameServer extends EventEmitter{
 
     private _port:number;
     private _wss!:WebSocketServer;
@@ -16,11 +17,16 @@ export class GameServer{
     private _apiMap:Map<ApiMsgEnum, Function> = new Map();
 
     constructor(port:number){
+        super();
         this._port = port;
     }
 
     public get ApiMap():Map<ApiMsgEnum, Function>{
         return this._apiMap;
+    }
+
+    public get ConnectionSet():Set<Connection>{
+        return this._connectionSet;
     }
 
     start(){
@@ -43,17 +49,17 @@ export class GameServer{
             this._wss.on("connection", (ws:WebSocket)=>{
                 const connection = new Connection(this, ws);
                 this._connectionSet.add(connection);
-                console.log("New connection established", this._connectionSet.size);
+                this.emit("connection", connection)
                 //监听close事件，connection关闭时server移除连接
                 connection.on("close", ()=>{
                     this._connectionSet.delete(connection);
-                    console.log("Connection closed", this._connectionSet.size);
+                    this.emit("disconnection", connection);
                 });
             })
         });
     }
 
-    setApi(api:ApiMsgEnum, callback:Function){
+    setApi<T extends keyof IModel['api']>(api:T, callback:(connection:Connection, args:IModel['api'][T]['req'])=>void){
         console.log("server set api:", api, callback);
         this._apiMap.set(api, callback);
     }

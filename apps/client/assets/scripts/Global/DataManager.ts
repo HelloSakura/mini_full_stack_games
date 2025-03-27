@@ -67,6 +67,9 @@ export class DataManager extends Singleton<DataManager>() {
         return this._selfPlayerID;
     }
 
+    public set SelfPlayerID(id:number){
+        this._selfPlayerID = id;
+    }
     public get FrameID():number{
         return this._frameID++;
     }

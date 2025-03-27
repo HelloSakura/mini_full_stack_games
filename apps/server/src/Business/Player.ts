@@ -12,10 +12,11 @@ export class Player {
     private _connection:Connection;
     private _roomID:number;
 
-    constructor(playerID:number, name:string, connection:Connection){
+    constructor(playerID:number, name:string, connection:Connection, roomID:number = 0){
         this._playerID = playerID;
         this._name = name;
         this._connection = connection;
+        this._roomID = roomID;
     }
 
     public get PlayerID(){

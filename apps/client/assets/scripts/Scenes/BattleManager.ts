@@ -13,7 +13,7 @@ import { JoystickManager } from "../UI/JoystickManager";
 import { ResourceManager } from "../Global/ResourceManager";
 import { ActorManager } from "../Entity/Actor/ActorManager";
 import { EventEnum, PrefabPathEnum, TexturePathEnum } from "../Enum/Enum";
-import { ApiMsgEnum, EntityTypeEnum, IClientInput, InputTypeEnum } from "../Common";
+import { ApiMsgEnum, EntityTypeEnum, IClientInput, IMsgServerSync, InputTypeEnum } from "../Common";
 import { BulletManager } from "../Entity/Bullet/BulletManager";
 import { ObjectPoolManager } from "../Global/ObjectPoolManager";
 import { NetWorkManager } from "../Global/NetWorkManager";
@@ -41,14 +41,6 @@ export class BattleManager extends Component{
             this._connectServer(),
             this._loadRes(),
         ]);
-        const {success, error, data} = await NetWorkManager.Instance.callApi(ApiMsgEnum.MsgPlayerJoin, "I am player");
-        if(!success){
-            console.log("error:", error);
-            return;
-        }
-        else{
-            console.log("success ret:", data);
-        }
         this._initGame();
     }
 
@@ -205,7 +197,7 @@ export class BattleManager extends Component{
         NetWorkManager.Instance.sendMsg(ApiMsgEnum.MsgClientSync, msg);
     }
 
-    private _handleServerSync({inputs}:any){
+    private _handleServerSync({inputs, lastFrameID}:IMsgServerSync){
         console.log("server sync:", inputs);
         for(const input of inputs){
             DataManager.Instance.applyInput(input);

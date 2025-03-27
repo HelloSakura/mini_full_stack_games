@@ -5,14 +5,15 @@
 */
 
 import { Singleton } from "../Base/Singleton";
+import { IMsgPlayerJoinReq } from "../Common";
 import { Connection } from "../Core";
 import { Player } from "./Player";
 export class PlayerManager extends Singleton<PlayerManager>() {
-    private _nextPlayID;
+    private _nextPlayID:number = 1;
     private _playerSet:Set<Player> = new Set();
     private _playerMap:Map<number, Player> = new Map();
 
-    createPlayer(name:string, connection:Connection){
+    createPlayer({name, connection}:IMsgPlayerJoinReq & {connection:Connection}){
         const player = new Player(this._nextPlayID++, name, connection);
         this._playerSet.add(player);
         this._playerMap.set(player.PlayerID, player);
