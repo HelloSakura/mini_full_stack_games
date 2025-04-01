@@ -22,7 +22,7 @@ export class LoginManager extends Component{
     onLoad(){
         this.loginButton.node.on(Button.EventType.CLICK, this._handleLoginBtnClicked, this);
         //预加载更快跳转
-        director.preloadScene(SceneEnum.Battle);
+        director.preloadScene(SceneEnum.Hall);
     }
 
     async start(){
@@ -52,6 +52,6 @@ export class LoginManager extends Component{
 
         DataManager.Instance.SelfPlayerID = data.player.playerID;
         console.log("Login success ret:", data);
-        director.loadScene(SceneEnum.Battle);
+        director.loadScene(SceneEnum.Hall);
     }
 }

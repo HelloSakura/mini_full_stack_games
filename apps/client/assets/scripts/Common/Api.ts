@@ -4,7 +4,7 @@
 * @date: 2025/03/24
 */
 
-interface IPlayer{
+export interface IPlayer{
     playerID:number,
     name:string,
     roomID:number
@@ -16,4 +16,12 @@ export interface IMsgPlayerJoinReq{
 
 export interface IMsgPlayerJoinRsp{
     player:IPlayer
+}
+
+export interface IMsgPlayerListReq{
+
+}
+
+export interface IMsgPlayerListRsp{
+    list:Array<IPlayer>
 }

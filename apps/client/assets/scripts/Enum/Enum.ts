@@ -58,5 +58,6 @@ export enum TexturePathEnum {
 
 export enum SceneEnum{
   Battle = 'Battle',
-  Login = 'Login'
+  Login = 'Login',
+  Hall = 'Hall'
 }

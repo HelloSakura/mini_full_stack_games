@@ -89,7 +89,8 @@ export class NetWorkManager extends Singleton<NetWorkManager>(){
                     this.unListen(head as any, callback, null);
                 }, 5000);
 
-                const callback = (res)=>{
+                const callback = (res:ICallApiRet<IModel['api'][T]['rsp']>)=>{
+                    console.log('closure callback res:', res);
                     resolve(res);
                     clearTimeout(timer);
                     this.unListen(head as any, callback, null);
@@ -137,10 +138,10 @@ export class NetWorkManager extends Singleton<NetWorkManager>(){
             }
         }
 
-    private _emit<T extends keyof IModel['msg']>(event:T, args:IModel['msg'][T]){
+    private _emit<T extends keyof IModel['msg']>(event:T, args:any){
         if(this._eventMap.has(event)){
-            this._eventMap.get(event).forEach(item => {
-                item.callback.apply(item.ctx, args);
+            this._eventMap.get(event).forEach(item => { 
+                item.callback.call(item.ctx, args);
             });
         }
     }

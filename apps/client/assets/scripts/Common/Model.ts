@@ -1,6 +1,6 @@
-import { IMsgPlayerJoinReq, IMsgPlayerJoinRsp } from "./Api";
+import { IMsgPlayerJoinReq, IMsgPlayerJoinRsp, IMsgPlayerListReq, IMsgPlayerListRsp } from "./Api";
 import { ApiMsgEnum } from "./Enum";
-import { IMsgClientSync, IMsgServerSync } from "./Msg";
+import { IMsgClientSync, IMsgPlayerList, IMsgServerSync } from "./Msg";
 
 /**
 * @author Lucida
@@ -10,11 +10,17 @@ import { IMsgClientSync, IMsgServerSync } from "./Msg";
 export interface IModel{
     api:{
         [ApiMsgEnum.MsgPlayerJoin]:{
-            req:IMsgPlayerJoinReq,
+            req:IMsgPlayerJoinReq
             rsp:IMsgPlayerJoinRsp
+        },
+
+        [ApiMsgEnum.MsgPlayerList]:{
+            req:IMsgPlayerListReq
+            rsp:IMsgPlayerListRsp
         }
     }
     msg:{
+        [ApiMsgEnum.MsgPlayerList]:IMsgPlayerList
         [ApiMsgEnum.MsgClientSync]:IMsgClientSync
         [ApiMsgEnum.MsgServerSync]:IMsgServerSync
     }
