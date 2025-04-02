@@ -7,9 +7,10 @@
 import { WebSocket } from "ws";
 import { GameServer } from "./GameServer";
 import { EventEmitter } from "stream";
+import { IModel } from "../Common";
 
 interface IItem {
-    callpack: Function;
+    callback: Function;
     ctx: unknown;       //上下文参数
 }
 
@@ -72,50 +73,51 @@ export class Connection extends EventEmitter{
         });
     }
 
-    sendMsg(head:string, data:any){
+    sendMsg<T extends keyof IModel['msg']>(head:T, data:IModel['msg'][T]){
         const msg = {
             head:head,
             data:data
         };
+        console.log('server send msg:', msg);
         this._ws.send(JSON.stringify(msg));
     }
 
     // 监听
-    listenMsg(name:string, callback:Function, ctx:unknown){
+    listenMsg<T extends keyof IModel['msg']>(name:T, callback:(args:IModel['msg'][T])=>void, ctx:unknown){
         this._on(name, callback, ctx);
     }
 
     //停止监听
-    unListen(name:string, callback:Function, ctx:unknown){
+    unListen<T extends keyof IModel['msg']>(name:T, callback:(args:IModel['msg'][T])=>void, ctx:unknown){
         this._off(name, callback, ctx);
     }
 
 
-    private _on(event:string, callpack:Function, ctx:unknown){
+    private _on<T extends keyof IModel['msg']>(event:T, callback:(args:IModel['msg'][T])=>void, ctx:unknown){
         if(this._msgMap.has(event)){
             //@ts-ignore
-            this._msgMap.get(event).push({ callpack, ctx });
+            this._msgMap.get(event).push({ callback, ctx });
         }
         else{
-            this._msgMap.set(event, [{ callpack, ctx }]);
+            this._msgMap.set(event, [{ callback, ctx }])
         }
     }
 
-    private _off(event:string, callpack:Function, ctx:unknown){
+    private _off<T extends keyof IModel['msg']>(event:T, callback:(args:IModel['msg'][T])=>void, ctx:unknown){
         if(this._msgMap.has(event)){
             //@ts-ignore
-            const index = this._msgMap.get(event).findIndex(item => item.callpack === callpack && item.ctx === ctx);
+            const index = this._msgMap.get(event).findIndex(item => item.callback === callback && item.ctx === ctx);
             //@ts-ignore
             index > -1 && this._msgMap.get(event).splice(index, 1);
         }
     }
 
-    private _emit(event:string, ...data:unknown[]){
+    private _emit<T extends keyof IModel['msg']>(event:T, args:IModel['msg'][T]){
         if(this._msgMap.has(event)){
             //@ts-ignore
             this._msgMap.get(event).forEach(item => {
                 console.log('connection emit msg event:', event);
-                item.callpack.apply(item.ctx, data);
+                item.callback.apply(item.ctx, args);
             });
         }
     }

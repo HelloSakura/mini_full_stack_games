@@ -5,7 +5,7 @@
 */
 
 import { Singleton } from "../Base/Singleton";
-import { IMsgPlayerJoinReq } from "../Common";
+import { ApiMsgEnum, IMsgPlayerJoinReq } from "../Common";
 import { Connection } from "../Core";
 import { Player } from "./Player";
 export class PlayerManager extends Singleton<PlayerManager>() {
@@ -28,9 +28,20 @@ export class PlayerManager extends Singleton<PlayerManager>() {
         }
     }
 
+    //todo 同步玩家信息
+    syncPlayers(){
+        for(const player of this._playerSet){
+            player.Connection.sendMsg(ApiMsgEnum.MsgPlayerList, {list:this.getPlayerListView()});
+        }
+    }
+
+    getPlayerListView(){
+        return Array.from(this._playerSet).map(player=>this.getPlayerView(player));
+    }
+
     getPlayerView(player:Player){
         return {
-            playID:player.PlayerID,
+            playerID:player.PlayerID,
             name:player.Name,
             roomID:player.RoomID
         }

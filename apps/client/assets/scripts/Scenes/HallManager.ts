@@ -27,12 +27,13 @@ export class HallManger extends Component{
     }
 
     start(){
+        this.playerContainer.removeAllChildren();
         this.getPlayer();
     }
 
     async getPlayer(){
         //获取玩家列表
-        const {success, error, data} = await NetWorkManager.Instance.callApi(ApiMsgEnum.MsgPlayerList, {});
+        const {success, error, data} = await NetWorkManager.Instance.callApi(ApiMsgEnum.ApiPlayerList, {});
         if(!success){
             console.log("Get player list error:", error);
             return;
@@ -42,7 +43,7 @@ export class HallManger extends Component{
 
     public renderPlayer({list}:IMsgPlayerList){
         if(!this.playerContainer || !this.playerPrefab) return;
-        
+        console.log("hall render player list", list);
         for(const child of this.playerContainer.children){
             child.active = false;
         }

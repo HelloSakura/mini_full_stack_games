@@ -81,6 +81,7 @@ export class NetWorkManager extends Singleton<NetWorkManager>(){
     }
 
     callApi<T extends keyof IModel['api']>(head:T, data:IModel['api'][T]['req']):Promise<ICallApiRet<IModel['api'][T]['rsp']>>{
+        console.log('client callApi:', head, data);
         return new Promise((resolve)=>{
             try{
                 //定时器防止超时

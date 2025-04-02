@@ -42,7 +42,7 @@ export class LoginManager extends Component{
             return;
         }
         
-        const {success, error, data} = await NetWorkManager.Instance.callApi(ApiMsgEnum.MsgPlayerJoin, {
+        const {success, error, data} = await NetWorkManager.Instance.callApi(ApiMsgEnum.ApiPlayerJoin, {
             name:name,
         });
         if(!success){
