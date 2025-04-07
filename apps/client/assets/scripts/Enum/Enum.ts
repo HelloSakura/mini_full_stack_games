@@ -30,6 +30,7 @@ export enum EventEnum {
   BulletBorn = 'BulletBorn',  //子弹产生
   ClientSync = 'ClientSync',  //客户端同步
   ServerSync = 'ServerSync',  //服务器同步
+  RoomJoin = 'RoomJoin',  //加入房间
 }
 
 //PrefabPathEnum的key必须和EntityTypeEnum的value一致
@@ -59,5 +60,6 @@ export enum TexturePathEnum {
 export enum SceneEnum{
   Battle = 'Battle',
   Login = 'Login',
-  Hall = 'Hall'
+  Hall = 'Hall',
+  Room = 'Room'
 }

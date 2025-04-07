@@ -5,7 +5,7 @@
 */
 
 import { Singleton } from "../Base/Singleton";
-import { ApiMsgEnum, IMsgPlayerJoinReq } from "../Common";
+import { ApiMsgEnum, IApiPlayerJoinReq, IPlayer, IMsgPlayerList } from "../Common";
 import { Connection } from "../Core";
 import { Player } from "./Player";
 export class PlayerManager extends Singleton<PlayerManager>() {
@@ -13,11 +13,18 @@ export class PlayerManager extends Singleton<PlayerManager>() {
     private _playerSet:Set<Player> = new Set();
     private _playerMap:Map<number, Player> = new Map();
 
-    createPlayer({name, connection}:IMsgPlayerJoinReq & {connection:Connection}){
+    createPlayer({name, connection}:IApiPlayerJoinReq & {connection:Connection}){
         const player = new Player(this._nextPlayID++, name, connection);
         this._playerSet.add(player);
         this._playerMap.set(player.PlayerID, player);
         return player;
+    }
+
+    public get PlayerSet():Set<Player>{
+        return this._playerSet;
+    }
+    public get PlayerMap():Map<number, Player>{
+        return this._playerMap;
     }
 
     removePlayer(pid:number){
@@ -31,15 +38,19 @@ export class PlayerManager extends Singleton<PlayerManager>() {
     //todo 同步玩家信息
     syncPlayers(){
         for(const player of this._playerSet){
-            player.Connection.sendMsg(ApiMsgEnum.MsgPlayerList, {list:this.getPlayerListView()});
+            player.Connection.sendMsg(ApiMsgEnum.MsgPlayerList, {playerList:this.getPlayerListView()});
         }
     }
 
-    getPlayerListView(){
+    getPlayerListView():IPlayer[]{
         return Array.from(this._playerSet).map(player=>this.getPlayerView(player));
     }
 
-    getPlayerView(player:Player){
+    getPlayerListViewBySet(playerSet:Set<Player>):IPlayer[]{
+        return Array.from(playerSet).map(player=>this.getPlayerView(player));
+    }
+
+    getPlayerView(player:Player):IPlayer{
         return {
             playerID:player.PlayerID,
             name:player.Name,

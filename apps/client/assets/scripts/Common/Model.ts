@@ -1,6 +1,7 @@
-import { IMsgPlayerJoinReq as IApiPlayerJoinReq, IMsgPlayerJoinRsp as IApiPlayerJoinRsp, IMsgPlayerListReq as IApiPlayerListReq, IMsgPlayerListRsp as IApiPlayerListRsp } from "./Api";
+
+import { IApiPlayerJoinReq, IApiPlayerJoinRsp, IApiPlayerListReq, IApiPlayerListRsp, IApiRoomCreateReq, IApiRoomCreateRsp, IApiRoomJoinReq, IApiRoomJoinRsp, IApiRoomLeaveReq, IApiRoomLeaveRsp, IApiRoomListReq, IApiRoomListRsp } from "./Api";
 import { ApiMsgEnum } from "./Enum";
-import { IMsgClientSync, IMsgPlayerList, IMsgServerSync } from "./Msg";
+import { IMsgClientSync, IMsgPlayerList, IMsgRoomList, IMsgRoomSync, IMsgServerSync } from "./Msg";
 
 /**
 * @author Lucida
@@ -17,11 +18,34 @@ export interface IModel{
         [ApiMsgEnum.ApiPlayerList]:{
             req:IApiPlayerListReq
             rsp:IApiPlayerListRsp
+        },
+
+        [ApiMsgEnum.ApiRoomCreate]:{
+            req:IApiRoomCreateReq
+            rsp:IApiRoomCreateRsp
+        }
+
+        [ApiMsgEnum.ApiRoomList]:{
+            req:IApiRoomListReq
+            rsp:IApiRoomListRsp
+        }
+
+        [ApiMsgEnum.ApiRoomJoin]:{
+            req:IApiRoomJoinReq
+            rsp:IApiRoomJoinRsp
+        }
+
+        [ApiMsgEnum.ApiRoomLeave]:{
+            req:IApiRoomLeaveReq
+            rsp:IApiRoomLeaveRsp
         }
     }
+
     msg:{
         [ApiMsgEnum.MsgPlayerList]:IMsgPlayerList
+        [ApiMsgEnum.MsgRoomList]:IMsgRoomList
         [ApiMsgEnum.MsgClientSync]:IMsgClientSync
         [ApiMsgEnum.MsgServerSync]:IMsgServerSync
+        [ApiMsgEnum.MsgRoomSync]:IMsgRoomSync
     }
 }

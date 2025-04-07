@@ -5,7 +5,7 @@
 */
 
 import { Prefab, SpriteFrame, Node } from "cc";
-import { EntityTypeEnum, IActorMove, IBullet, IClientInput, InputTypeEnum, IState, ITimePast, IWeaponShoot } from "../Common";
+import { EntityTypeEnum, IActorMove, IBullet, IClientInput, InputTypeEnum, IRoom, IState, ITimePast, IWeaponShoot } from "../Common";
 import { JoystickManager } from "../UI/JoystickManager";
 import { ActorManager } from "../Entity/Actor/ActorManager";
 import { Singleton } from "../Base/Singleton";
@@ -34,6 +34,8 @@ export class DataManager extends Singleton<DataManager>() {
 
     //玩家ID，登陆的时候获取，鉴别身份
     private _selfPlayerID:number = 1;
+    //房间ID
+    private _room:IRoom = null;
     //帧ID
     private _frameID:number = 0;
     
@@ -70,6 +72,15 @@ export class DataManager extends Singleton<DataManager>() {
     public set SelfPlayerID(id:number){
         this._selfPlayerID = id;
     }
+
+    public get Room():IRoom{
+        return this._room;
+    }
+
+    public set Room(room:IRoom){
+        this._room = room;
+    }
+
     public get FrameID():number{
         return this._frameID++;
     }
@@ -147,7 +158,6 @@ export class DataManager extends Singleton<DataManager>() {
         //console.log(bullet);
         //产生子弹触发事件
         EventManager.Instance.emit(EventEnum.BulletBorn, owner);
-
         //推入数组
         this._state.bullets.push(bullet);
     }

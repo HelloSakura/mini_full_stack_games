@@ -34,4 +34,8 @@ export class Player {
     public get RoomID(){
         return this._roomID;
     }
+
+    public set RoomID(roomID:number){
+        this._roomID = roomID;
+    }
 }

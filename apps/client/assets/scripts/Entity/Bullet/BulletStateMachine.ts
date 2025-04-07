@@ -34,7 +34,6 @@ export class BulletStateMachine extends StateMachine{
     private _initAnimationEvent(){
 
     }
-
     
     public run(){
         switch(this._curState){

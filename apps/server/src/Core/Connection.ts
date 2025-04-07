@@ -37,6 +37,7 @@ export class Connection extends EventEmitter{
                 // const {frameID, input} = data;
                 // console.log(this._msgMap, head, data);
                 //console.log('connection-client msg:', head, data);
+                //查看对应的server是否有监听事件，
                 if(this._server.ApiMap.has(head)){
                     try{
                         const callback = this._server.ApiMap.get(head);
@@ -58,7 +59,7 @@ export class Connection extends EventEmitter{
                 }
                 else{
                     try{
-                        //没有server api，除法connection自身的msg event
+                        //没有server api，检查connection自身的msg event
                         console.log('connection-client msg event:', head, data);
                         this._emit(head, data);
                     }

@@ -4,7 +4,7 @@
 * @date: 2025/03/24
 */
 
-import { IPlayer } from "./Api";
+import { IPlayer, IRoom } from "./Api";
 import { IClientInput } from "./State";
 
 
@@ -19,5 +19,13 @@ export interface IMsgServerSync{
 }
 
 export interface IMsgPlayerList {
-    list:IPlayer[]
+    playerList: IPlayer[];
+}
+
+export interface IMsgRoomList {
+    roomList:IRoom[]
+}
+
+export interface IMsgRoomSync{
+    room:IRoom
 }

@@ -25,9 +25,9 @@ const { ccclass, property } = _decorator;
 export class BattleManager extends Component{
     private _stage:Node;
     private _UI:Node; 
-    
     private _shouldUpdate:boolean = false;
 
+    
     onLoad(){
     }
 
