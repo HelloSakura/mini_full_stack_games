@@ -1,10 +1,14 @@
-import { connect } from "http2";
+/**
+* @author Lucida
+* @description: 服务器主脚本
+* @date: 2025/04/01
+*/
+
 import { PlayerManager } from "./Business/PlayerManager";
 import { RoomManager } from "./Business/RoomManager";
 import { ApiMsgEnum, IApiPlayerJoinReq, IApiPlayerJoinRsp, IApiPlayerListReq, IApiPlayerListRsp, IApiRoomCreateReq, IApiRoomCreateRsp, IApiRoomJoinReq, IApiRoomJoinRsp, IApiRoomLeaveReq, IApiRoomLeaveRsp, IApiRoomListReq, IApiRoomListRsp, NetPort } from "./Common";
 import { Connection, GameServer } from "./Core";
 import { symlinkCommon } from "./Utils";
-import { Room } from "./Business/Room";
 
 symlinkCommon();
 
@@ -121,7 +125,6 @@ server.on("disconnection", (connection:Connection)=>{
         PlayerManager.Instance.removePlayer(connection.playerID);
     }
 })
-
 
 server.start()
 .then(()=>{
