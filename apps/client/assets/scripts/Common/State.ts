@@ -13,6 +13,7 @@ export interface IVec2{
 
 export interface IActor{
     id:number,  //角色id
+    name:string, //角色名称
     hp:number,  //角色hp
     position:IVec2,
     direction:IVec2,

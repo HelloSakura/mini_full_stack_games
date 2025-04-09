@@ -13,7 +13,6 @@ import { StateMachine, getInitParamsTrigger } from "../../Base/StateMachine";
 
 const {ccclass, property} = _decorator
 export class ActorStateMachine extends StateMachine{
-
     public init(type:EntityTypeEnum){
         this._type = type;
         this._animComponent = this.node.addComponent(Animation);

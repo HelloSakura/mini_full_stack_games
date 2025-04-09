@@ -31,6 +31,7 @@ export class DataManager extends Singleton<DataManager>() {
     private _bulletMap:Map<number, BulletManager> = new Map();
     private _prefabMap:Map<string, Prefab> = new Map();
     private _stage:Node;    //舞台
+    
 
     //玩家ID，登陆的时候获取，鉴别身份
     private _selfPlayerID:number = 1;
@@ -38,32 +39,41 @@ export class DataManager extends Singleton<DataManager>() {
     private _room:IRoom = null;
     //帧ID
     private _frameID:number = 0;
+    //上一次状态
+    private _lastState:IState = null;
     
     private _state:IState = {
         actors:[
-            {
-                id:1,
-                hp:80,
-                position:{x:150, y:150},
-                direction:{x:0, y:0},
-                type:EntityTypeEnum.Actor1,
-                weaponType:EntityTypeEnum.Weapon1,
-                bulletType:EntityTypeEnum.Bullet2
-            },
-            {
-                id:2,
-                hp:80,
-                position:{x:-150, y:-150},
-                direction:{x:0, y:0},
-                type:EntityTypeEnum.Actor1,
-                weaponType:EntityTypeEnum.Weapon1,
-                bulletType:EntityTypeEnum.Bullet2
-            }
+            // {
+            //     id:1,
+            //     hp:80,
+            //     position:{x:150, y:150},
+            //     direction:{x:0, y:0},
+            //     type:EntityTypeEnum.Actor1,
+            //     weaponType:EntityTypeEnum.Weapon1,
+            //     bulletType:EntityTypeEnum.Bullet2
+            // },
+            // {
+            //     id:2,
+            //     hp:80,
+            //     position:{x:-150, y:-150},
+            //     direction:{x:0, y:0},
+            //     type:EntityTypeEnum.Actor1,
+            //     weaponType:EntityTypeEnum.Weapon1,
+            //     bulletType:EntityTypeEnum.Bullet2
+            // }
         ],
         bullets:[],
         nextBulletID:1,
     }
 
+    public get LastState():IState{
+        return this._lastState;
+    }
+
+    public set LastState(state:IState){
+        this._lastState = state;
+    }
 
     public get SelfPlayerID():number{
         return this._selfPlayerID;
@@ -96,7 +106,11 @@ export class DataManager extends Singleton<DataManager>() {
     public get State():IState{
         return this._state;
     }
-
+    
+    public set State(state:IState){
+        this._state = state;
+    }
+    
     public get ActorMap():Map<number, ActorManager>{
         return this._actorMap;
     }

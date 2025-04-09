@@ -1,7 +1,7 @@
 
-import { IApiPlayerJoinReq, IApiPlayerJoinRsp, IApiPlayerListReq, IApiPlayerListRsp, IApiRoomCreateReq, IApiRoomCreateRsp, IApiRoomJoinReq, IApiRoomJoinRsp, IApiRoomLeaveReq, IApiRoomLeaveRsp, IApiRoomListReq, IApiRoomListRsp } from "./Api";
+import { IApiGameStartReq, IApiGameStartRsp, IApiPlayerJoinReq, IApiPlayerJoinRsp, IApiPlayerListReq, IApiPlayerListRsp, IApiRoomCreateReq, IApiRoomCreateRsp, IApiRoomJoinReq, IApiRoomJoinRsp, IApiRoomLeaveReq, IApiRoomLeaveRsp, IApiRoomListReq, IApiRoomListRsp } from "./Api";
 import { ApiMsgEnum } from "./Enum";
-import { IMsgClientSync, IMsgPlayerList, IMsgRoomList, IMsgRoomSync, IMsgServerSync } from "./Msg";
+import { IMsgClientSync, IMsgGameStart, IMsgPlayerList, IMsgRoomList, IMsgRoomSync, IMsgServerSync } from "./Msg";
 
 /**
 * @author Lucida
@@ -39,6 +39,11 @@ export interface IModel{
             req:IApiRoomLeaveReq
             rsp:IApiRoomLeaveRsp
         }
+
+        [ApiMsgEnum.ApiGameStart]:{
+            req:IApiGameStartReq
+            rsp:IApiGameStartRsp
+        }
     }
 
     msg:{
@@ -47,5 +52,6 @@ export interface IModel{
         [ApiMsgEnum.MsgClientSync]:IMsgClientSync
         [ApiMsgEnum.MsgServerSync]:IMsgServerSync
         [ApiMsgEnum.MsgRoomSync]:IMsgRoomSync
+        [ApiMsgEnum.MsgGameStart]:IMsgGameStart
     }
 }

@@ -4,7 +4,7 @@
 * @date: 2025/03/10
 */
 
-import { _decorator, instantiate, IVec2} from "cc";
+import { _decorator, instantiate, IVec2, tween, Tween, Vec3} from "cc";
 import { EntityTypeEnum, IBullet } from "../../Common";
 import { EntityManager } from "../../Base/EntityManager";
 import { BulletStateMachine } from "./BulletStateMachine";
@@ -21,6 +21,8 @@ const { ccclass, property } = _decorator;
 export class BulletManager extends EntityManager{
     private _type:EntityTypeEnum;
     private _bulletID:number;
+    private _targetPos:Vec3;
+    private _tween:Tween<unknown>;
 
     init(data:IBullet){
         this._type = data.bulleType;
@@ -31,8 +33,7 @@ export class BulletManager extends EntityManager{
         
         //子弹初始化不显示，避免渲染出来的第一帧出现屏闪的问题
         this.node.active = false;
-
-        
+        this._targetPos = undefined;
     }
 
     onLoad(){
@@ -44,13 +45,33 @@ export class BulletManager extends EntityManager{
     }
 
     render(data:IBullet){
-        this.node.active = true;
-        const {position, direction} = data;
-        this.node.setPosition(position.x, position.y);
+        this._renderPosition(data);
+        this._renderDirection(data);
+    }
 
+    private _renderPosition(data:IBullet){
+        const {position} = data;
+        const newPos = new Vec3(position.x, position.y);
+        if(!this._targetPos){
+            this.node.active = true;
+            this.node.setPosition(position.x, position.y);
+            this._targetPos = new Vec3(newPos);
+        }
+        else if(!this._targetPos.equals(newPos)){
+            this._tween?.stop();
+            this.node.setPosition(this._targetPos);
+            this._targetPos = newPos;
+            this._tween = tween(this.node)
+            .to(0.1, {position:this._targetPos})
+            .start();
+        }
+        
+    }
+
+    private _renderDirection(data:IBullet){
+        const {direction} = data;
         const side = Math.sqrt(direction.x ** 2 + direction.y ** 2);
         const angle = direction.x > 0 ? rad2Angle(Math.asin(direction.y / side)) : rad2Angle(Math.PI - Math.asin(direction.y / side));
-
         this.node.setRotationFromEuler(0, 0, angle);
     }
 

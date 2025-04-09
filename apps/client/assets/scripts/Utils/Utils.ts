@@ -17,3 +17,17 @@ export const sortSpriteFrame = (spriteFrames: Array<SpriteFrame>) => {
 export const rad2Angle = (rad:number) => {
     return rad * 180 / Math.PI;
 }
+
+export const deepClone = (obj:any) => {
+    //基本类型直接返回
+    if(typeof obj !== 'object' || obj === null){
+        return obj;
+    }
+    //是否是数组类型
+    const res = Array.isArray(obj) ? [] : {};
+    for(const key in obj){
+        if(Object.prototype.hasOwnProperty.call(obj, key)){
+            res[key] = deepClone(obj[key]);
+        }
+    }
+}

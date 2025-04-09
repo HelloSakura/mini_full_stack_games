@@ -29,9 +29,11 @@ export enum ApiMsgEnum{
     ApiRoomJoin   = 'ApiRoomJoin',      //加入房间
     ApiRoomList   = 'ApiRoomList',      //房间列表
     ApiRoomLeave  = 'ApiRoomLeave',     //离开房间
+    ApiGameStart  = 'ApiGameStart',     //游戏开始
     MsgClientSync = 'MsgClientSync',    //客户端同步
     MsgServerSync = 'MsgServerSync',
     MsgPlayerList = 'MsgPlayerList',    //玩家同步（通过消息）
     MsgRoomList   = 'MsgRoomList',      //房间列表同步
     MsgRoomSync   = "MsgRoomSync",      //房间内部信息同步 
+    MsgGameStart  = 'MsgGameStart',     //游戏开始
 }

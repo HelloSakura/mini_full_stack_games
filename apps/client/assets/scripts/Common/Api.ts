@@ -60,10 +60,19 @@ export interface IApiRoomJoinRsp{
     room:IRoom
 }
 
+//离开房间
 export interface IApiRoomLeaveReq{
 }
 
 export interface IApiRoomLeaveRsp{
+}
+
+//开始游戏
+export interface IApiGameStartReq{
+}
+
+
+export interface IApiGameStartRsp{
 }
 
 

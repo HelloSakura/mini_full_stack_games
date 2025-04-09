@@ -54,7 +54,22 @@ export class WeaponManager extends EntityManager{
         const anchorWorldPos = this._anchor.getWorldPosition();
         const direction = new Vec2(pointWorldPos.x - anchorWorldPos.x, pointWorldPos.y - anchorWorldPos.y).normalize();
         //每次接受射击事件，在当前位置生成了新的bullet Data
-        DataManager.Instance.applyInput({
+        // DataManager.Instance.applyInput({
+        //     owner:this._owner,
+        //     type:InputTypeEnum.WeaponShoot,
+        //     position:{
+        //         x:pointStagePos.x,
+        //         y:pointStagePos.y
+        //     },
+        //     direction:{
+        //         x:direction.x,
+        //         y:direction.y
+        //     }
+        // });
+
+
+        // 
+        EventManager.Instance.emit(EventEnum.ClientSync, {
             owner:this._owner,
             type:InputTypeEnum.WeaponShoot,
             position:{
@@ -65,7 +80,8 @@ export class WeaponManager extends EntityManager{
                 x:direction.x,
                 y:direction.y
             }
-        });
+        })
+        
 
         //console.log(DataManager.Instance.State.bullets);
     }

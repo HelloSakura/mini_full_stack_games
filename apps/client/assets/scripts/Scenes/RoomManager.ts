@@ -5,11 +5,12 @@
 */
 
 import { _decorator, Button, Component, director, instantiate, Node, Prefab } from "cc";
-import { ApiMsgEnum, IMsgRoomSync, IPlayer } from "../Common";
+import { ApiMsgEnum, IMsgGameStart, IMsgRoomSync, IPlayer } from "../Common";
 import { DataManager } from "../Global/DataManager";
 import { NetWorkManager } from "../Global/NetWorkManager";
 import { PlayerManager } from "../UI/PlayerManager";
 import { SceneEnum } from "../Enum/Enum";
+import { deepClone } from "../Utils/Utils";
 
 const {ccclass, property} = _decorator;
 
@@ -21,14 +22,19 @@ export class RoomManager extends Component{
     private playerPrefab:Prefab;
     @property(Button)
     private leaveBtn:Button;
+    @property(Button)
+    private startBtn:Button;
 
     onLoad(){
         NetWorkManager.Instance.listenMsg(ApiMsgEnum.MsgRoomSync, this._handleRoomSync, this);
-        this.leaveBtn.node.on(Button.EventType.CLICK, this._handleBtnClicked$$, this);
+        NetWorkManager.Instance.listenMsg(ApiMsgEnum.MsgGameStart, this._handleGameStart, this);
+        this.leaveBtn.node.on(Button.EventType.CLICK, this._onLeaveBtnClicked$$, this);
+        this.startBtn.node.on(Button.EventType.CLICK, this._onStartBtnClicked$$, this);
     }
 
     onDestroy(){
         NetWorkManager.Instance.unListen(ApiMsgEnum.MsgRoomSync, this._handleRoomSync, this);
+        NetWorkManager.Instance.unListen(ApiMsgEnum.MsgGameStart, this._handleGameStart, this);
     }
 
     start(){
@@ -66,7 +72,7 @@ export class RoomManager extends Component{
     }
 
 
-    private async _handleBtnClicked$$(){
+    private async _onLeaveBtnClicked$$(){
         let {success, error, data} = await NetWorkManager.Instance.callApi(ApiMsgEnum.ApiRoomLeave, {});
         if(!success){
             console.log("Leave room error:", error);
@@ -75,6 +81,27 @@ export class RoomManager extends Component{
         //置空Room信息
         DataManager.Instance.Room = null;
         director.loadScene(SceneEnum.Hall);
+    }
+
+    private async _onStartBtnClicked$$(){
+        //某玩家点击开始游戏
+        let {success, error, data} = await NetWorkManager.Instance.callApi(ApiMsgEnum.ApiGameStart, {});
+        if(!success){
+            console.log("Start game error:", error);
+            return;
+        }
+    }
+
+    private _handleGameStart({state}:IMsgGameStart){
+        if(!state){
+            console.log("Start game error with null state");
+            return;
+        }
+        DataManager.Instance.State = state;
+        DataManager.Instance.LastState = deepClone(state);
+        console.log("Start game success", state);
+
+        director.loadScene(SceneEnum.Battle);
     }
 }
 

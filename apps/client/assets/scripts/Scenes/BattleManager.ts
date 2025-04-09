@@ -13,11 +13,12 @@ import { JoystickManager } from "../UI/JoystickManager";
 import { ResourceManager } from "../Global/ResourceManager";
 import { ActorManager } from "../Entity/Actor/ActorManager";
 import { EventEnum, PrefabPathEnum, TexturePathEnum } from "../Enum/Enum";
-import { ApiMsgEnum, EntityTypeEnum, IClientInput, IMsgServerSync, InputTypeEnum } from "../Common";
+import { ApiMsgEnum, EntityTypeEnum, IClientInput, IMsgClientSync, IMsgServerSync, InputTypeEnum } from "../Common";
 import { BulletManager } from "../Entity/Bullet/BulletManager";
 import { ObjectPoolManager } from "../Global/ObjectPoolManager";
 import { NetWorkManager } from "../Global/NetWorkManager";
 import { EventManager } from "../Global/EventManager";
+import { deepClone } from "../Utils/Utils";
 
 const { ccclass, property } = _decorator;
 
@@ -26,7 +27,7 @@ export class BattleManager extends Component{
     private _stage:Node;
     private _UI:Node; 
     private _shouldUpdate:boolean = false;
-
+    private _pendingMsg:IMsgClientSync[] = [];
     
     onLoad(){
     }
@@ -80,10 +81,10 @@ export class BattleManager extends Component{
 
     private _tick(dt:number){
         this._tickActor(dt);
-        DataManager.Instance.applyInput({
-            type:InputTypeEnum.TimePast,
-            dt:dt
-        })
+        // DataManager.Instance.applyInput({
+        //     type:InputTypeEnum.TimePast,
+        //     dt:dt
+        // })
     }
 
     private _tickActor(dt:number){
@@ -102,6 +103,7 @@ export class BattleManager extends Component{
     private _renderActor(){
         for(const data of DataManager.Instance.State.actors){
             let am = DataManager.Instance.ActorMap.get(data.id);
+            //console.log("render actor:", data);
             const {id, type} = data;
             if(!am){
                 const prefab = DataManager.Instance.PrefabMap.get(type);
@@ -125,7 +127,6 @@ export class BattleManager extends Component{
                 // const prefab = DataManager.Instance.PrefabMap.get(bulleType);
                 // const bullet = instantiate(prefab);
                 // bullet.setParent(this._stage);
-
                 const bullet = ObjectPoolManager.Instance.get(bulleType);
                 bm = bullet.getComponent(BulletManager) || bullet.addComponent(BulletManager);
                 DataManager.Instance.BulletMap.set(id, bm);
@@ -195,12 +196,30 @@ export class BattleManager extends Component{
             frameID:DataManager.Instance.FrameID
         }
         NetWorkManager.Instance.sendMsg(ApiMsgEnum.MsgClientSync, msg);
+
+        //角色移动预测回滚, 记录
+        if(input.type === InputTypeEnum.ActorMove){
+            DataManager.Instance.applyInput(input);
+            this._pendingMsg.push(msg);
+        }
+
+
     }
 
     private _handleServerSync({inputs, lastFrameID}:IMsgServerSync){
-        console.log("server sync:", inputs);
+        //console.log("server sync:", inputs);
+        //回滚到上一次
+        DataManager.Instance.State = DataManager.Instance.LastState;
+        //应用服务端状态
         for(const input of inputs){
             DataManager.Instance.applyInput(input);
+        }
+        //记录服务端状态
+        DataManager.Instance.LastState = deepClone(DataManager.Instance.State);
+        //过滤
+        this._pendingMsg = this._pendingMsg.filter((msg)=>msg.frameID > lastFrameID);
+        for(const msg of this._pendingMsg){
+            DataManager.Instance.applyInput(msg.input);
         }
     }
 }
