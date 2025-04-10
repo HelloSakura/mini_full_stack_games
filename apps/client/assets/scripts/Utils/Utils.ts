@@ -30,4 +30,5 @@ export const deepClone = (obj:any) => {
             res[key] = deepClone(obj[key]);
         }
     }
+    return res;
 }

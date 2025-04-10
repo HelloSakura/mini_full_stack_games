@@ -6,7 +6,7 @@
 
 import { PlayerManager } from "./Business/PlayerManager";
 import { RoomManager } from "./Business/RoomManager";
-import { ApiMsgEnum, IApiPlayerJoinReq, IApiPlayerJoinRsp, IApiPlayerListReq, IApiPlayerListRsp, IApiRoomCreateReq, IApiRoomCreateRsp, IApiRoomJoinReq, IApiRoomJoinRsp, IApiRoomLeaveReq, IApiRoomLeaveRsp, IApiRoomListReq, IApiRoomListRsp, NetPort } from "./Common";
+import { ApiMsgEnum, IApiGameStartReq, IApiGameStartRsp, IApiPlayerJoinReq, IApiPlayerJoinRsp, IApiPlayerListReq, IApiPlayerListRsp, IApiRoomCreateReq, IApiRoomCreateRsp, IApiRoomJoinReq, IApiRoomJoinRsp, IApiRoomLeaveReq, IApiRoomLeaveRsp, IApiRoomListReq, IApiRoomListRsp, NetPort } from "./Common";
 import { Connection, GameServer } from "./Core";
 import { symlinkCommon } from "./Utils";
 
@@ -111,6 +111,18 @@ server.setApi(ApiMsgEnum.ApiRoomLeave, (connection:Connection, data:IApiRoomLeav
     return {};
 })
 
+server.setApi(ApiMsgEnum.ApiGameStart, (connection:Connection, data:IApiGameStartReq):IApiGameStartRsp=>{
+    if(!connection.playerID){
+        throw new Error("ApiGameStart: connection not found");
+    }
+    const player = PlayerManager.Instance.PlayerMap.get(connection.playerID);
+    if(!player){
+        throw new Error(`ApiGameStart: player ${connection.playerID} not exists`);
+    }
+    RoomManager.Instance.startRoom(player.RoomID);
+    return {};
+})
+
 
 server.on("connection", (connection:Connection)=>{
     console.log("New connection established, server size:", server.ConnectionSet.size);
@@ -120,10 +132,10 @@ server.on("disconnection", (connection:Connection)=>{
     console.log("Connection closed, server size", server.ConnectionSet.size);
     if(connection.playerID){
         console.log("remove player", connection.playerID);
-        //玩家退出的时候同步列表
-        PlayerManager.Instance.syncPlayers();
         PlayerManager.Instance.removePlayer(connection.playerID);
     }
+    //玩家退出的时候同步列表
+    PlayerManager.Instance.syncPlayers();
 })
 
 server.start()

@@ -43,26 +43,7 @@ export class DataManager extends Singleton<DataManager>() {
     private _lastState:IState = null;
     
     private _state:IState = {
-        actors:[
-            // {
-            //     id:1,
-            //     hp:80,
-            //     position:{x:150, y:150},
-            //     direction:{x:0, y:0},
-            //     type:EntityTypeEnum.Actor1,
-            //     weaponType:EntityTypeEnum.Weapon1,
-            //     bulletType:EntityTypeEnum.Bullet2
-            // },
-            // {
-            //     id:2,
-            //     hp:80,
-            //     position:{x:-150, y:-150},
-            //     direction:{x:0, y:0},
-            //     type:EntityTypeEnum.Actor1,
-            //     weaponType:EntityTypeEnum.Weapon1,
-            //     bulletType:EntityTypeEnum.Bullet2
-            // }
-        ],
+        actors:[],
         bullets:[],
         nextBulletID:1,
     }
@@ -178,13 +159,13 @@ export class DataManager extends Singleton<DataManager>() {
 
     private _applyTimePast(input:ITimePast){
         const {dt} = input;
-        const {bullets} = this._state
+        const {bullets, actors} = this._state
         //倒序遍历删除子弹，push会一直压在最上面
         for(let i = bullets.length - 1; i >= 0; i--){
             const bullet = bullets[i];
             
-            for(let j = this._state.actors.length - 1; j >= 0; j--){
-                let actor = this._state.actors[j]; 
+            for(let j = actors.length - 1; j >= 0; j--){
+                let actor = actors[j]; 
                 //子弹打中其它玩家，子弹不和自身碰撞
                 if(bullet.owner != actor.id && Math.sqrt((bullet.position.x - actor.position.x) ** 2 + (bullet.position.y - actor.position.y) ** 2) < (BULLET_RADIUS + ACTOR_RADIUS)){
                     actor.hp -= BULLET_DAMAGE;

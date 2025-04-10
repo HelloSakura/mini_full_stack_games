@@ -8,6 +8,7 @@ import { Singleton } from "../Base/Singleton";
 import { ApiMsgEnum, IApiPlayerJoinReq, IPlayer, IMsgPlayerList } from "../Common";
 import { Connection } from "../Core";
 import { Player } from "./Player";
+import { RoomManager } from "./RoomManager";
 export class PlayerManager extends Singleton<PlayerManager>() {
     private _nextPlayID:number = 1;
     private _playerSet:Set<Player> = new Set();
@@ -30,6 +31,12 @@ export class PlayerManager extends Singleton<PlayerManager>() {
     removePlayer(pid:number){
         const player = this._playerMap.get(pid);
         if(player){
+            const roomID = player.RoomID;
+            if(roomID){
+                RoomManager.Instance.leaveRoom(roomID, pid);
+                RoomManager.Instance.syncRooms();
+                RoomManager.Instance.syncRoom(roomID);
+            }
             this._playerSet.delete(player);
             this._playerMap.delete(pid);
         }

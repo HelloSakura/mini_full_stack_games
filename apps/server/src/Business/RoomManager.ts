@@ -65,7 +65,9 @@ export class RoomManager extends Singleton<RoomManager>(){
         }
     }
 
-
+    /**
+     * 同步所有房间信息
+     */
     public syncRooms(){
         for(const player of PlayerManager.Instance.PlayerSet){
             player.Connection.sendMsg(ApiMsgEnum.MsgRoomList, {roomList:this.getRoomListView()});
@@ -76,6 +78,13 @@ export class RoomManager extends Singleton<RoomManager>(){
         const room = this._roomMap.get(rid);
         if(room){
             room.sync();
+        }
+    }
+
+    public startRoom(rid:number){
+        const room = this._roomMap.get(rid);
+        if(room){
+            room.start();
         }
     }
 

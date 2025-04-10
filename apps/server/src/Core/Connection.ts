@@ -43,7 +43,7 @@ export class Connection extends EventEmitter{
                         const callback = this._server.ApiMap.get(head);
                         const res = callback?.call(null, this, data);
                         //将结果发回给客户端
-                        console.log('connection-server api ret:', res);
+                        //console.log('connection-server api ret:', res);
                         this.sendMsg(head, {
                             success:true,
                             data:res
@@ -60,7 +60,7 @@ export class Connection extends EventEmitter{
                 else{
                     try{
                         //没有server api，检查connection自身的msg event
-                        console.log('connection-client msg event:', head, data);
+                        //console.log('connection-client msg event:', head, data);
                         this._emit(head, data);
                     }
                     catch(error){
@@ -74,27 +74,32 @@ export class Connection extends EventEmitter{
         });
     }
 
-    sendMsg<T extends keyof IModel['msg']>(head:T, data:IModel['msg'][T]){
+    async sendMsg<T extends keyof IModel['msg']>(head:T, data:IModel['msg'][T]){
         const msg = {
             head:head,
             data:data
         };
-        console.log('server send msg:', msg);
+        //console.log('server send msg:', msg);
+        // await new Promise(resolve => {
+        //     setTimeout(() => {
+        //         resolve(true);
+        //     }, 1000);
+        // });
         this._ws.send(JSON.stringify(msg));
     }
 
     // 监听
-    listenMsg<T extends keyof IModel['msg']>(name:T, callback:(args:IModel['msg'][T])=>void, ctx:unknown){
+    listenMsg<T extends keyof IModel['msg']>(name:T, callback:(connection:Connection, args:IModel['msg'][T])=>void, ctx:unknown){
         this._on(name, callback, ctx);
     }
 
     //停止监听
-    unListen<T extends keyof IModel['msg']>(name:T, callback:(args:IModel['msg'][T])=>void, ctx:unknown){
+    unListen<T extends keyof IModel['msg']>(name:T, callback:(connection:Connection, args:IModel['msg'][T])=>void, ctx:unknown){
         this._off(name, callback, ctx);
     }
 
 
-    private _on<T extends keyof IModel['msg']>(event:T, callback:(args:IModel['msg'][T])=>void, ctx:unknown){
+    private _on<T extends keyof IModel['msg']>(event:T, callback:(connection:Connection, args:IModel['msg'][T])=>void, ctx:unknown){
         if(this._msgMap.has(event)){
             //@ts-ignore
             this._msgMap.get(event).push({ callback, ctx });
@@ -104,7 +109,7 @@ export class Connection extends EventEmitter{
         }
     }
 
-    private _off<T extends keyof IModel['msg']>(event:T, callback:(args:IModel['msg'][T])=>void, ctx:unknown){
+    private _off<T extends keyof IModel['msg']>(event:T, callback:(connection:Connection, args:IModel['msg'][T])=>void, ctx:unknown){
         if(this._msgMap.has(event)){
             //@ts-ignore
             const index = this._msgMap.get(event).findIndex(item => item.callback === callback && item.ctx === ctx);
@@ -117,8 +122,8 @@ export class Connection extends EventEmitter{
         if(this._msgMap.has(event)){
             //@ts-ignore
             this._msgMap.get(event).forEach(item => {
-                console.log('connection emit msg event:', event);
-                item.callback.apply(item.ctx, args);
+                //console.log('connection emit msg event:', event);
+                item.callback.call(item.ctx, this, args);
             });
         }
     }

@@ -60,7 +60,7 @@ export class GameServer extends EventEmitter{
     }
 
     setApi<T extends keyof IModel['api']>(api:T, callback:(connection:Connection, args:IModel['api'][T]['req'])=>void){
-        console.log("server set api:", api, callback);
+        //console.log("server set api:", api, callback);
         this._apiMap.set(api, callback);
     }
 
