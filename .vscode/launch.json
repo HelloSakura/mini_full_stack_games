@@ -10,6 +10,15 @@
             "name": "针对 localhost 启动 Chrome",
             "url": "http://localhost:8080",
             "webRoot": "${workspaceFolder}"
-        }
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Debug TS",
+            "preLaunchTask": "tsc: build - tsconfig.json",
+            "program": "${workspaceFolder}/apps/server/src/Utils/index.ts",
+            "skipFiles": ["<node_internals>/**"],
+            "sourceMaps": true
+          }
     ]
 }
