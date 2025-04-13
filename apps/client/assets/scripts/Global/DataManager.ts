@@ -5,13 +5,14 @@
 */
 
 import { Prefab, SpriteFrame, Node } from "cc";
-import { EntityTypeEnum, IActorMove, IBullet, IClientInput, InputTypeEnum, IRoom, IState, ITimePast, IWeaponShoot } from "../Common";
+import { EntityTypeEnum, IActorMove, IBullet, IClientInput, InputTypeEnum, IRoom, IState, ITimePast, IWeaponShoot, toFixed } from "../Common";
 import { JoystickManager } from "../UI/JoystickManager";
 import { ActorManager } from "../Entity/Actor/ActorManager";
 import { Singleton } from "../Base/Singleton";
 import { BulletManager } from "../Entity/Bullet/BulletManager";
 import { EventManager } from "./EventManager";
-import { EventEnum } from "../Enum/Enum";
+import { EventEnum, PrefabPathEnum } from "../Enum/Enum";
+import { randomBySeed } from "../Utils/Utils";
 
 const ACTOR_SPEED = 100;        //人物移速
 const BULLET_SPEED = 500;       //子弹移速
@@ -46,6 +47,7 @@ export class DataManager extends Singleton<DataManager>() {
         actors:[],
         bullets:[],
         nextBulletID:1,
+        seed:1,
     }
 
     public get LastState():IState{
@@ -137,8 +139,8 @@ export class DataManager extends Singleton<DataManager>() {
         if(!actor) return;
         actor.direction.x = x;
         actor.direction.y = y;
-        actor.position.x += x * dt * ACTOR_SPEED;
-        actor.position.y += y * dt * ACTOR_SPEED;
+        actor.position.x += toFixed(x * dt * ACTOR_SPEED);
+        actor.position.y += toFixed(y * dt * ACTOR_SPEED);
     }
 
     private _applyWeaponShoot(input:IWeaponShoot){
@@ -168,10 +170,21 @@ export class DataManager extends Singleton<DataManager>() {
                 let actor = actors[j]; 
                 //子弹打中其它玩家，子弹不和自身碰撞
                 if(bullet.owner != actor.id && Math.sqrt((bullet.position.x - actor.position.x) ** 2 + (bullet.position.y - actor.position.y) ** 2) < (BULLET_RADIUS + ACTOR_RADIUS)){
-                    actor.hp -= BULLET_DAMAGE;
+                    const random = randomBySeed(this._state.seed);
+                    this._state.seed = random;
+                    if(random >= 0.5){
+                        console.log("暴击");
+                        actor.hp -= BULLET_DAMAGE * 3;
+                    }else{
+                        actor.hp -= BULLET_DAMAGE;
+                    }
+                    
                     //爆炸位置取中点
                     //EventManager.Instance.emit(EventEnum.ExplosionBorn, bullet.id, (bullet.position.x + actor.position.x)/2,  (bullet.position.y + actor.position.y)/2);
-                    EventManager.Instance.emit(EventEnum.ExplosionBorn, bullet.id, {x:(bullet.position.x + actor.position.x)/2,  y:(bullet.position.y + actor.position.y)/2});
+                    EventManager.Instance.emit(EventEnum.ExplosionBorn, bullet.id, {
+                        x:toFixed((bullet.position.x + actor.position.x)/2),  
+                        y:toFixed((bullet.position.y + actor.position.y)/2)
+                    });
                     bullets.splice(i, 1);
                     break;
                 }
@@ -192,8 +205,8 @@ export class DataManager extends Singleton<DataManager>() {
         //更新子弹
         for(const bullet of bullets){
             //方向 * 速度 * 时间
-            bullet.position.x += bullet.direction.x * BULLET_SPEED * dt;
-            bullet.position.y += bullet.direction.y * BULLET_SPEED * dt;
+            bullet.position.x += toFixed(bullet.direction.x * BULLET_SPEED * dt);
+            bullet.position.y += toFixed(bullet.direction.y * BULLET_SPEED * dt);
         }
     }
 }

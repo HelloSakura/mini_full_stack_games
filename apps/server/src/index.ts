@@ -8,9 +8,9 @@ import { PlayerManager } from "./Business/PlayerManager";
 import { RoomManager } from "./Business/RoomManager";
 import { ApiMsgEnum, IApiGameStartReq, IApiGameStartRsp, IApiPlayerJoinReq, IApiPlayerJoinRsp, IApiPlayerListReq, IApiPlayerListRsp, IApiRoomCreateReq, IApiRoomCreateRsp, IApiRoomJoinReq, IApiRoomJoinRsp, IApiRoomLeaveReq, IApiRoomLeaveRsp, IApiRoomListReq, IApiRoomListRsp, NetPort } from "./Common";
 import { Connection, GameServer } from "./Core";
-import { symlinkCommon } from "./Utils";
+ import { symlinkCommon } from "./Utils";
 
-symlinkCommon();
+ symlinkCommon();
 
 declare module "./Core"{
     interface Connection{

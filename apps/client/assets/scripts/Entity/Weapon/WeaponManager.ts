@@ -6,7 +6,7 @@
 
 import { _decorator, Component, Animation, Node, UITransform, Vec2} from "cc";
 import { DataManager } from "../../Global/DataManager";
-import { IActor, InputTypeEnum } from "../../Common";
+import { IActor, InputTypeEnum, toFixed } from "../../Common";
 import { EntityManager } from "../../Base/EntityManager";
 import { EntityStateEnum, EventEnum } from "../../Enum/Enum";
 import { WeaponStateMachine } from "./WeaponStateMachine";
@@ -73,12 +73,12 @@ export class WeaponManager extends EntityManager{
             owner:this._owner,
             type:InputTypeEnum.WeaponShoot,
             position:{
-                x:pointStagePos.x,
-                y:pointStagePos.y
+                x:toFixed(pointStagePos.x),
+                y:toFixed(pointStagePos.y)
             },
             direction:{
-                x:direction.x,
-                y:direction.y
+                x:toFixed(direction.x),
+                y:toFixed(direction.y)
             }
         })
         

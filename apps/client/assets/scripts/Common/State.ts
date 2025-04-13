@@ -40,22 +40,23 @@ export interface IExplosion{
 export interface IState{
     actors:IActor[],
     bullets:IBullet[],
-    nextBulletID:number
+    nextBulletID:number,
+    seed:number
 }
 
 
 export type IClientInput = IActorMove | IWeaponShoot | ITimePast;
 
 export interface IActorMove{
-    id:number,
     type:InputTypeEnum.ActorMove,
+    id:number,
     direction:IVec2,
     dt:number       //时间
 }
 
 export interface IWeaponShoot{
-    owner:number,
     type:InputTypeEnum.WeaponShoot,
+    owner:number,
     position:IVec2,
     direction:IVec2,
 }

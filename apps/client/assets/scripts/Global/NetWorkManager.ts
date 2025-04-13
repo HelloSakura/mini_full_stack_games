@@ -5,7 +5,7 @@
 */
 
 import { Singleton } from "../Base/Singleton";
-import { IModel } from "../Common";
+import { ApiMsgEnum, binaryDecode, binaryEncode, IModel, strDecode, strEncode } from "../Common";
 import { NetPort } from "../Common/Common";
 
 //事件管理器 接口
@@ -27,7 +27,7 @@ export class NetWorkManager extends Singleton<NetWorkManager>(){
     private _isConnected:boolean = false;   //是否建立成功连接
 
     //事件回调注册
-    private _eventMap:Map<string, IItem[]> = new Map();
+    private _eventMap:Map<ApiMsgEnum, IItem[]> = new Map();
 
 
     public get IsConnected(){
@@ -45,6 +45,7 @@ export class NetWorkManager extends Singleton<NetWorkManager>(){
 
             console.log("ws try to connect: ", this._port);
             this._ws = new WebSocket(`ws://localhost:${this._port}`);
+            this._ws.binaryType = "arraybuffer";
             this._ws.onopen = ()=>{
                 this._isConnected = true;
                 console.log("connect to server succeeded");
@@ -66,8 +67,12 @@ export class NetWorkManager extends Singleton<NetWorkManager>(){
             this._ws.onmessage = (msg)=>{
                 //console.log("ws onmessage:", msg.data);
                 try{
-                    let json = JSON.parse(msg.data);
-                    //解构，head和data前后端约定的结构
+                    // const typeArray = new Uint8Array(msg.data);
+                    // const str = strDecode(typeArray);
+                    // let json = JSON.parse(str);
+                    // //解构，head和data前后端约定的结构
+                    
+                    const json = binaryDecode(msg.data);
                     const {head, data} = json;
                     this._emit(head, data);
                 }
@@ -109,7 +114,16 @@ export class NetWorkManager extends Singleton<NetWorkManager>(){
             head:head,
             data:data
         };
-        this._ws.send(JSON.stringify(msg));
+
+        // const str = JSON.stringify(msg);
+        // const typeArray = strEncode(str);
+        // const arrayBuffer = new ArrayBuffer(typeArray.length);
+        // const dataView = new DataView(arrayBuffer);
+        // for(let i = 0; i < typeArray.length; i++){
+        //     dataView.setUint8(i, typeArray[i]);
+        // }
+        const dataView = binaryEncode(head, data);
+        this._ws.send(dataView.buffer);
     }
 
     // 监听

@@ -6,7 +6,7 @@
 
 import { _decorator, Component, Animation, instantiate, ProgressBar, IVec2, Vec3, Tween, tween} from "cc";
 import { DataManager } from "../../Global/DataManager";
-import { EntityTypeEnum, IActor, InputTypeEnum } from "../../Common";
+import { EntityTypeEnum, IActor, InputTypeEnum, toFixed } from "../../Common";
 import { EntityManager } from "../../Base/EntityManager";
 import { ActorStateMachine } from "./ActorStateMachine";
 import { EntityStateEnum, EventEnum } from "../../Enum/Enum";
@@ -66,8 +66,11 @@ export class ActorManager extends EntityManager{
             EventManager.Instance.emit(EventEnum.ClientSync, {
                     id:DataManager.Instance.SelfPlayerID,
                     type:InputTypeEnum.ActorMove,
-                    direction:{x,y},
-                    dt:dt
+                    direction:{
+                        x:toFixed(x),
+                        y:toFixed(y)
+                    },
+                    dt:toFixed(dt)
                 }
             );            
         }

@@ -5,6 +5,7 @@
 */
 
 import { ApiMsgEnum, EntityTypeEnum, IClientInput, IMsgClientSync, InputTypeEnum, IState } from "../Common";
+import { toFixed } from "../Common/Utils";
 import { Connection } from "../Core";
 import { Player } from "./Player";
 import { PlayerManager } from "./PlayerManager";
@@ -107,6 +108,7 @@ export class Room{
             })),
             bullets:[],
             nextBulletID:1,
+            seed: 1
         }
 
         console.log('Game start', state);
@@ -151,7 +153,7 @@ export class Room{
         const dt = now - (this._lastTime ?? now);   //第一帧就是0
         this._pendingInput.push({
             type:InputTypeEnum.TimePast,
-            dt
+            dt:toFixed(dt)
         });
         this._lastTime = now;
     }

@@ -9,13 +9,13 @@ import { IClientInput, IState } from "./State";
 
 
 export interface IMsgClientSync{
-    input:IClientInput,
     frameID:number,
+    input:IClientInput,
 }
 
 export interface IMsgServerSync{
-    inputs:IClientInput[],
     lastFrameID:number,
+    inputs:IClientInput[],
 }
 
 export interface IMsgPlayerList {

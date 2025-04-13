@@ -7,7 +7,10 @@
 import { WebSocket } from "ws";
 import { GameServer } from "./GameServer";
 import { EventEmitter } from "stream";
-import { IModel } from "../Common";
+import { ApiMsgEnum, IModel } from "../Common";
+import { strDecode, strEncode } from "../Common/Utils";
+import { binaryDecode, binaryEncode } from "../Common/Binary";
+import { bufferToArrayBuffer } from "../Utils";
 
 interface IItem {
     callback: Function;
@@ -17,7 +20,7 @@ interface IItem {
 export class Connection extends EventEmitter{
     private _server:GameServer;
     private _ws:WebSocket;
-    private _msgMap:Map<string, IItem[]> = new Map();
+    private _msgMap:Map<ApiMsgEnum, IItem[]> = new Map();
 
     constructor(server:GameServer, ws:WebSocket){
         super();
@@ -30,10 +33,10 @@ export class Connection extends EventEmitter{
         });
 
         this._ws.on("message", (buffer:Buffer) => {
-            const str = buffer.toString();
             try{
-                const msg = JSON.parse(str);
-                const {head, data} = msg;
+                const json = binaryDecode(bufferToArrayBuffer(buffer));
+                const {head, data} = json;
+                console.log('connection-client msg:', head, data);
                 // const {frameID, input} = data;
                 // console.log(this._msgMap, head, data);
                 //console.log('connection-client msg:', head, data);
@@ -79,13 +82,14 @@ export class Connection extends EventEmitter{
             head:head,
             data:data
         };
-        //console.log('server send msg:', msg);
-        // await new Promise(resolve => {
-        //     setTimeout(() => {
-        //         resolve(true);
-        //     }, 1000);
-        // });
-        this._ws.send(JSON.stringify(msg));
+        // const str = JSON.stringify(msg);
+        // const typeArray = strEncode(str);
+        // const buffer = Buffer.from(typeArray);
+        // this._ws.send(buffer);
+        const dataView = binaryEncode(head, data);
+        // console.log('connection-server msg:', head, data);
+        // console.log('connection-server buffer:', dataView.buffer);
+        this._ws.send(dataView.buffer);
     }
 
     // 监听
