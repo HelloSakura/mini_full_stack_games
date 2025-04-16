@@ -1,0 +1,33 @@
+
+@startuml
+
+title Actor Behavior
+
+participant ActorManager as AM
+participant DataManager as DM
+participant JoystickManager as JM
+participant EventManager as EM
+
+AM -> AM:init()
+note right
+    1.初始化状态机
+    2.生成武器，设置对应子弹类型
+end note
+
+
+group tick [dt: number] [tick方法，访问DM获取摇杆输入]
+    AM -> DM :access JM by DM
+    activate AM
+        DM -> JM: get input
+        JM --> DM: input: Vec2
+    DM --> AM: input: Vec2
+    AM -> EM: emit(event:ClientSync)
+    deactivate AM
+end
+
+group render [data: IActor] [根据数据渲染角色位置、方向和HP等]
+    AM -> AM: renderPosition(data:IActor)
+    AM -> AM: renderDirection(data:IActor)
+    AM -> AM: renderHp(data:IActor)
+end
+@enduml
