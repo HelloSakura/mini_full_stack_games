@@ -1,0 +1,41 @@
+@startuml
+
+participant HallManager as H
+participant NetworkManager as NM
+participant Server as S
+
+====
+autonumber
+H -> NM : callApi: ApiPlayerList
+hnote over H: start
+NM -> S : sendMsg: ApiPlayerListReq
+S -> NM : ApiPlayerListRsp
+NM -> H : playerList
+H -> H : renderPlayer()
+
+autonumber
+H -> NM : callApi: ApiRoomList
+NM -> S : sendMsg: ApiRoomListReq
+S -> NM : ApiRoomListRsp
+NM -> H : roomList
+H -> H : renderRoom()
+
+====
+autonumber
+H -> NM : callApi: ApiRoomCreate
+hnote over H: create room
+NM -> S : sendMsg: ApiRoomCreateReq
+S -> NM : ApiRoomCreateRsp
+NM -> H : room
+H -> :load scene Room
+
+====
+autonumber
+H -> NM : callApi: ApiRoomJoin
+hnote over H: join room
+NM -> S : sendMsg: ApiRoomJoinReq
+S -> NM : ApiRoomJoinRsp
+NM -> H : room
+H -> :load scene Room
+
+@enduml

@@ -1,0 +1,19 @@
+@startuml
+
+participant LoginManager as L
+participant NetworkManager as NM
+participant server as S
+
+L -> NM : start
+hnote over L: start
+NM -> S : connect()
+S -> NM : connect succeed
+NM -> L : connect succeed
+
+L -> NM : callApi:ApiPlayerJoin
+NM -> S : sendMsg:ApiPlayerJoinReq
+S -> NM : ApiPlayerJoinRsp
+NM -> L : login succeed
+L -> : load scene Hall
+
+@enduml
