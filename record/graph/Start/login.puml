@@ -6,7 +6,7 @@ participant server as S
 
 L -> NM : start
 hnote over L: start
-NM -> S : connect()
+NM -> S : connect(): WebSocket
 S -> NM : connect succeed
 NM -> L : connect succeed
 

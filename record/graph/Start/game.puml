@@ -1,0 +1,50 @@
+@startuml
+!pragma teoz true
+
+participant JoyStickManager as JSM
+participant Actor as A
+participant BattleManager as BM
+participant DataManager as DM
+
+participant NetworkManager as NM
+participant Server as S
+
+{start} BM -> A
+
+activate BM
+    BM -> DM : getActors
+    activate BM
+        BM -> BM:renderActors()
+        DM --> BM : actors
+    deactivate BM
+
+    BM -> A :tick(dt)
+    activate BM
+        A -> JSM : getInput()
+        activate A
+            note left
+                Actor在tick方法中会获取摇杆数据
+                若摇杆数据发送变化，则会触发
+                ClientSync事件,BattleManager处理
+                该事件并将信息同步给服务器
+            end note
+            JSM --> A : input
+            A -> BM: "<font color=red>emit(ClientSync)  "
+        deactivate A
+    deactivate BM
+deactivate BM
+{end} A->BM
+{start} <-> {end} : update
+
+BM -> NM : handle(ClientSync)
+NM -> S : sendMsg(MsgClientSync, msg)
+
+NM -> BM : listen(MsgServerSync)
+BM -> DM : DM.State = Msg.State
+note right
+    BattleManager负责监听两个事件，一个是客户端的输入，需要同步给服务器
+    一个是来自服务的的同步事件，将里面的信息更新到DataManager的State中，
+    这样BattleManager就可以根据DataManager的State来渲染各个Entity
+end note
+
+@enduml

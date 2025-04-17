@@ -1,0 +1,39 @@
+@startuml
+
+participant BattleManager as BM
+
+group start
+    BM -> BM: clearGame()
+    note right
+        初始化UI节点相关信息
+    end note
+
+    group Promise
+        BM -> BM: connectServer()
+        note right
+            连接服务器
+        end note
+        BM -> BM: loadRes()
+        note right
+            加载资源
+            1.加载预设（关键可复用的预设）
+            2.加载贴图
+        end note
+    end
+end
+
+
+group update
+    BM -> BM: render() : renderActor, renderBullet
+    note right
+        渲染角色
+        渲染子弹
+    end note
+    BM -> BM: tick(dt)：tickActor
+    note right
+        Actor读取摇杆的数据，触发ClientSync事件，
+        将移动数据        发送给服务器
+    end note
+end
+
+@enduml

@@ -7,6 +7,9 @@ participant ActorManager as AM
 participant DataManager as DM
 participant JoystickManager as JM
 participant EventManager as EM
+participant BattleManager as BM
+participant NetworkManager as NM
+participant Server as S
 
 AM -> AM:init()
 note right
@@ -24,6 +27,12 @@ group tick [dt: number] [tick方法，访问DM获取摇杆输入]
     AM -> EM: emit(event:ClientSync)
     deactivate AM
 end
+
+EM -> BM: emit(event:ClientSync)
+BM -> NM: Instance
+activate NM
+    BM -> NM: sendMsg(MsgClientSync)
+deactivate
 
 group render [data: IActor] [根据数据渲染角色位置、方向和HP等]
     AM -> AM: renderPosition(data:IActor)

@@ -16,8 +16,8 @@ H -> H : renderPlayer()
 autonumber
 H -> NM : callApi: ApiRoomList
 NM -> S : sendMsg: ApiRoomListReq
-S -> NM : ApiRoomListRsp
-NM -> H : roomList
+S --> NM : ApiRoomListRsp
+NM --> H : roomList
 H -> H : renderRoom()
 
 ====
@@ -25,8 +25,8 @@ autonumber
 H -> NM : callApi: ApiRoomCreate
 hnote over H: create room
 NM -> S : sendMsg: ApiRoomCreateReq
-S -> NM : ApiRoomCreateRsp
-NM -> H : room
+S --> NM : ApiRoomCreateRsp
+NM --> H : room
 H -> :load scene Room
 
 ====
@@ -34,8 +34,8 @@ autonumber
 H -> NM : callApi: ApiRoomJoin
 hnote over H: join room
 NM -> S : sendMsg: ApiRoomJoinReq
-S -> NM : ApiRoomJoinRsp
-NM -> H : room
+S --> NM : ApiRoomJoinRsp
+NM --> H : room
 H -> :load scene Room
 
 @enduml
