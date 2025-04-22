@@ -42,6 +42,12 @@ Promise.all是一个好东西，避免一个又一个await
 简单来讲就是通过动画剪辑添加多个属性轨道来控制不同的属性
 
 
+## 关于角色的移动控制
+
+并不复杂，通过BattleManager的tick方法，实际上是调用每个Entity的tick方法，当actor调用tick方法，检测到id与自己id一致时，通过DataManager来获取摇杆的数据（DataManager持有JoyStick的引用），摇杆监听move事件并修改自身属性值，Actor根据摇杆数据来进行移动，
+
+
+
 ## WebSocket通信
 
 使用webSoceket和WebSocketServer对象，绑定同一地址来建立连接

@@ -16,12 +16,15 @@ activate BM
     activate BM
         BM -> BM:renderActors()
         DM --> BM : actors
+        BM --> A : actorData
+        A -> A: render(actorData)
     deactivate BM
 
     BM -> A :tick(dt)
     activate BM
-        A -> JSM : getInput()
+        A-> A: tick(dt)
         activate A
+            A -> JSM : getInput()
             note left
                 Actor在tick方法中会获取摇杆数据
                 若摇杆数据发送变化，则会触发
